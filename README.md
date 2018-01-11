@@ -132,7 +132,32 @@ classはリンクのSVG pathに適用されるクラス名。デフォルトの�
 // comment
 ```
 
+## Tips
 
+
+### mark class 
+
+![2018-01-11 18 48 12](https://user-images.githubusercontent.com/18391019/34819202-76b1b0a0-f700-11e7-87b5-1d108aac5497.png)
+```
+//画像の左から順に対応
+//最小
+[mark] (mark) <5,5,15,15>
+
+[m2] (mark) <7,4,30,30>
+
+//bortherの変更
+[m3] (mark) <10,3,50,50>css(border:blue solid 4px; )
+
+// そのまま
+[m4] <15,3,50,50>
+==>[m5]
+
+// cssだけからmarkクラスを再現
+[m5] <19.5,3,50,50>css(background:none;border:4px solid blue; color:white; border-radius:100px;  box-shadow:none;z-index:20;)
+```
+使用例:markクラスによって、画像や文字に被せて表示可能(他の描画より上に来る為)
+
+![2018-01-11 18 53 25](https://user-images.githubusercontent.com/18391019/34819323-c4d07064-f700-11e7-88e3-35263fd0232a.png)
 
 
 # Copyright
