@@ -133,12 +133,6 @@ classはリンクのSVG pathに適用されるクラス名。デフォルトの�
 ```
 
 
-# Copyright
-
-Copyright 2016 Wakufactory 
-http://wakufactory.jp/ twitter:@wakufactory
-
-License: MIT 
 
 
 # Copyright
