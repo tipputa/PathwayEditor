@@ -1,0 +1,409 @@
+/* mdg basic css*/
+div.mdg {
+	position:relative ;
+	box-sizing:border-box;
+}
+div.mdg svg {
+	position:absolute ;
+	width:100% ;
+	height:100% ;
+	z-index:1 ;
+	pointer-events: none;
+}
+div.mdg .box {
+	position:absolute ;
+	border:none;
+    color:#08233E;
+	background-color:white;/* rgb(243, 255, 228);*/
+	line-height:100% ;
+	box-sizing:border-box;
+	cursor:move;
+    font-family: 'Helvetica';
+    border-radius:0.2em;
+    padding-top:0.25em;
+    padding-bottom:0.25em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+div.mdg .label {
+    position:absolute;
+    font-size:0.8em;
+    z-index:2;
+    border-radius:0.5em;
+    padding-top:0.25em;
+    padding-bottom:0.25em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    background-color: #FFE0B2;
+    border:1px solid #E65100;
+    color:#1A237E;
+    box-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
+}
+
+div.mdg a {
+/*  text-transform: uppercase;*/
+  color:blueviolet;
+  text-decoration: none;
+  position: relative;
+  border-bottom: solid 1px blueviolet;
+}
+
+div.mdg a:hover {
+  color: #054176;
+}
+
+div.mdg a:before {
+  content: '';
+  border-bottom: solid 1px #054176;
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  opacity: 0;
+}
+
+div.mdg a:hover:before {
+  opacity: 1.0;
+}
+
+div.mdg a, div.mdg a:before {
+  -webkit-transition: all 0.2s ease;
+          transition: all 0.2s ease;
+}
+
+div.mdg div.box {
+	text-align:center ;
+}
+div.mdg table.box {
+	border-collapse: collapse ;
+	margin:0 ;
+    border-radius:0.5em;
+}
+div.mdg table td {
+    border-radius:0.5em;
+    padding-top:0.2em;
+    padding-bottom:0.2em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+   /* border-top: 2px solid white*/
+}
+
+div.mdg table th {
+	background-color:#0C555D ;/*Bittersweet*/
+    color:white;
+	text-align: center ;
+    padding-top:0.5em;
+    padding-bottom:0.25em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+}
+div.mdg svg line {
+	stroke:#000 ;
+	stroke-width:2px ;
+}
+div.mdg svg path {
+	stroke:#2c3e50 ; 
+    stroke-width:1px;
+}
+
+figure {
+	margin:0 ;
+}
+
+/* preset class */
+div.mdg div.trans {
+	background:none ;
+	border:none ;
+    box-shadow:None;
+}
+div.mdg div.image, div.mdg div.image2, div.mdg div.image50, div.mdg div.image100 div.mdg div.image200{
+	background-color:white;
+	padding-left:1em ;
+	padding-right:1em ;
+    padding-top:0.3em ;
+	padding-bottom:0.3em ;
+}
+
+div.mdg div.image2 {
+	background-color:white;
+	padding-left:3em ;
+	padding-right:3em ;
+    padding-top:0.5em ;
+	padding-bottom:0.5em ;
+}
+
+div.mdg div.image img {
+	max-width:300px ;	
+}
+div.mdg div.image50 img{
+    max-width:50px;
+}
+
+div.mdg div.image100 img{
+    max-width:100px;
+}
+
+div.mdg div.image200 img{
+    max-width:200px;
+}
+
+
+/* text/stroke color */
+div.mdg .red {
+	color:red ;
+	stroke:#f00 ;
+}
+div.mdg .blue {
+	color:blue ;
+	stroke:#00f ;
+}
+div.mdg .green {
+	color:blue ;
+	stroke:#0f0 ;
+}
+div.mdg .white {
+	color:white ;
+	stroke:#fff ;
+}
+div.mdg .gray {
+	color:blue ;
+	stroke:#888 ;
+}
+/* border color */
+div.mdg .bd_red {
+	border-color:red ;
+}
+div.mdg .bd_blue {
+	border-color:blue ;
+}
+div.mdg .bd_green {
+	border-color:green ;
+}
+/* bg color */
+div.mdg .bg_red {
+	background-color:#fee ;
+}
+div.mdg .bg_blue {
+	background-color:#eef ;
+}
+div.mdg .bg_green {
+	background-color:#efe ;
+}
+div.mdg .bg_g25 {
+	background-color:#444 ;
+}
+div.mdg .bg_g50 {
+	background-color:#888 ;
+}
+div.mdg .bg_g75 {
+	background-color:#ccc ;
+}
+div.mdg .bg_black {
+	background-color:#000 ;
+}
+/* line style */
+div.mdg .l_w1 {
+	stroke-width:1px ;
+}
+div.mdg .l_w2 {
+	stroke-width:2px ;
+}
+div.mdg .l_w3 {
+	stroke-width:3px ;
+}
+div.mdg .l_w4 {
+	stroke-width:4px ;
+}
+div.mdg .l_w5 {
+	stroke-width:5px ;
+}
+div.mdg .l_d10 {
+	stroke-dasharray:10px ;
+}
+/* border radius */
+div.mdg .bd_r6 {
+	border-radius:6px ;
+}
+div.mdg .bd_r10 {
+	border-radius:10px ;
+}
+div.mdg .bd_r20 {
+	border-radius:20px ;
+}
+div.mdg .circle4 {
+	width:4em;
+	height:4em ;
+	text-align:center ;
+	padding-top:1em ;
+	border-radius:2em ;
+}
+/* alignment */
+div.mdg div.TC,table.TC {
+	text-align:center ;
+}
+div.mdg div.TR,table.TR {
+	text-align:right ;
+}
+div.mdg div.TL,table.TL {
+	text-align:left ;
+}
+/* font-style */
+div.mdg .bold {
+	font-weight:bold ;
+}
+div.mdg .FB {
+	font-weight:bold ;
+}
+div.mdg .FI {
+	font-style: italic ;
+}
+div.mdg .FM {
+	font-family:monospace;
+}
+/*　font-size */
+div.mdg .F05 {
+	font-size:0.5rem ;
+}
+div.mdg .F08 {
+	font-size:0.8rem ;
+}
+div.mdg .F15 {
+	font-size:1.5rem ;
+}
+div.mdg .F20 {
+	font-size:2.0rem ;
+}
+div.mdg .small1{
+    font-size:0.1em;
+}
+div.mdg .small2{
+    font-size:0.2em;
+}
+div.mdg .small3{
+    font-size:0.3em;
+}
+div.mdg .small4{
+    font-size:0.4em;
+}
+div.mdg .small5{
+    font-size:0.5em;
+}
+div.mdg .small6{
+    font-size:0.6em;
+}
+div.mdg .small7{
+    font-size:0.7em;
+}
+div.mdg .small8{
+    font-size:0.8em;
+}
+div.mdg .small9{
+    font-size:0.9em;
+}
+/* paddng */
+div.mdg .P05 {
+	padding:0.5rem ;
+}
+div.mdg .P10 {
+	padding:1rem ;
+}
+div.mdg .P15 {
+	padding:1.5rem ;
+}
+div.mdg .P20 {
+	padding:2rem ;
+}
+/* box sizes */
+div.mdg .W05 {
+	width:5rem ;
+}
+div.mdg .W10 {
+	width:10rem ;
+}
+div.mdg .W15 {
+	width:15rem ;
+}
+div.mdg .W20 {
+	width:20rem ;
+}
+div.mdg .H2 {
+	height:2rem ;
+}
+div.mdg .H3 {
+	height:3rem ;
+}
+div.mdg .H4 {
+	height:4rem ;
+}
+
+
+/* popuo用のツールチップ */ 
+/* ツールチップ部分を隠す */
+div.mdg .box span, .label span{
+    display: none;
+}
+ 
+/* マウスオーバー時にツールチップを表示 */
+div.mdg .box:hover span, .label:hover span{
+    display: block;                  /* ボックス要素にする */
+    position: absolute;            /* relativeからの絶対位置 */
+    top:auto;
+    font-size: 90%;
+    color:#08233E;
+    background-color: #E1F5FE;
+    width:auto;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 1px solid #0D47A1;
+    border-radius:3px;
+    z-index:10;
+}
+
+
+#view { 
+	height:100% ; 
+	flex-grow:1; 
+	display:flex ; 
+	flex-direction: column ; 
+		background-color:#333333 
+} 
+#control { 
+ margine:5px;
+ color:white;
+} 
+#vbase { 
+	height:100% ; 
+	position:relative ; 
+} 
+#rollbase { 
+	position:absolute ; 
+	top:5px ; 
+	right:5px;
+	bottom:5px;
+	left:5px; 
+	overflow:scroll ;	 
+} 
+#base { 
+	display:block ; 
+	font-family:sans-serif; 
+	background-color:rgb(250, 250, 250) ; 
+	transform-origin:0 0 ; 
+    border-radius: 0.2; 
+} 
+#zoom{ 
+	background-color:inherit; 
+} 
+input,button { 
+	font-size:1rem ; 
+} 
+input[type=range] { 
+	width:300px ; 
+	background-color:#ccc; 
+} 
+div.mdiv { 
+	margin:5px ;
+}
