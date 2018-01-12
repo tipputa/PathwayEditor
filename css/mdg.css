@@ -285,6 +285,22 @@ div.mdg .circle4 {
 	padding-top:1em ;
 	border-radius:2em ;
 }
+
+div.mdg .triangle {
+	/* 大きさの設定 (borderだけで描くので、widthとheightは0でよい) */
+    width: 0px;
+    height: 0px;
+
+	/* borderをうまく使って三角形を描く (高さ: 45px, 横幅: 28×2=56px) */
+    border-bottom: solid 45px black;
+    border-left: solid 28px transparent;
+    border-right: solid 28px transparent;
+    
+    padding:0;
+    box-shadow: none;
+    background-color:inherit;
+}
+
 /* alignment */
 div.mdg div.TC,table.TC {
 	text-align:center ;
