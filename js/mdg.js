@@ -72,10 +72,21 @@ var mdg_draw = function(_base) {
         }
         // <table> or <div>を作成。ここでは位置情報のセットはredrawで行う
         var e = $(type).addClass("box").attr('id',box.id).attr('title',box.id).
-            attr('draggable',d).attr('align',"center").html(inner) ;
+            attr('draggable',d).html(inner) ;
         if(box.cls) { // class情報の追加
             if(typeof box.cls == "string") box.cls = [box.cls] ;
             for(var i in box.cls) e.addClass(box.cls[i]) ;
+        }
+        if(box.size){
+            e.css("width", box.size.w+"px").css("height", box.size.h+"px");
+        }
+        if(box.css){
+            var css = box.css.split(";");
+            for(var i in css){
+                if(css[i] != ""){
+                var css2 = css[i].split(":");
+                if(css2.length>1) e.css(css2[0].trim(), css2[1].trim());
+            }}
         }
         
         this.base.append(e) ;
@@ -274,7 +285,7 @@ function setConnectPos(o,f) {
 
     // text 関連
     // md parser
-    this.m_h = /^\[([A-z0-9-_]*)\]\s*(?:\((.*)\))?\s*(?:<\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*>)?$/ ;
+    this.m_h = /^\[([A-z0-9-_]*)\]\s*(?:\(([^)]*)\))?\s*(?:<\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*,*\s*([0-9\.]+)?\s*,*\s*([0-9\.]+)?\s*>)?\s*(?:css\(([^)]*)\))?\s*$/ ;
     this.parse = function(text) {
         // return するbox, conn, genesの初期化
         var box = [] ;
@@ -286,15 +297,15 @@ function setConnectPos(o,f) {
         var m_comm = /^\/\// ;
         var m_wiki = /^<?nowiki>/;
         var m_sep = /^---*$/ ;
-        var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[(.*)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\((.*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([a-z0-9-_]+)\]\s*$/i ;
+        var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[([A-z0-9-_]+)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\(([^"=>]*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([A-z0-9-_]+)\]\s*$/i ;
         var m_ulink= /\?\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
-        var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
+        var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"([.*])")?\))?\s*(?:css\(([^)]*)\))?/i;
         var m_popStart = /^<pop>$/;
         var m_popEnd = /^<\/pop>$/;
         var m_title = /^#(.*)/ ;
 
         var l = text.split("\n") ;
-        var b = {id:"",bl:[]} ;
+        var b = {id:"",bl:[], check:false} ;
         var gene = {id:"", gl:[]};
         var boxcheck = true;
         // read start
@@ -308,8 +319,9 @@ function setConnectPos(o,f) {
             // wikiTag or blank
             if(cl =="" || m_comm.exec(cl) || cl.match(m_wiki)){continue;}
             else if(a = this.m_h.exec(cl)) { // set box info
-                if(b.bl.length>0) {
+                if(b.bl.length>0 || b.check) {
                     pbox(b) ;
+                    b.check = false;
                 } else if(gene.gl.length>0){
                     pgene(gene);
                     gene.id = "";
@@ -319,12 +331,16 @@ function setConnectPos(o,f) {
                 b.id = a[1] ;
                 b.bl = [] ;
                 b.cls = a[2] ;
-                b.pos = (a[3]!=undefined && a[4]!=undefined)?{x:a[3],y:a[4]}:undefined ;
+                b.pos = (a[3] && a[4])?{x:a[3],y:a[4]}:undefined ;
+                b.size = (a[5] && a[6]) ?{w:a[5], h:a[6]}:undefined;
+                b.css = (a[7])?a[7]:undefined;
+                if(b.size){b.check = true;}
             } else if(g = m_g.exec(cl)) { // set gene info
-                if(b.bl.length>0) {
+                if(b.bl.length>0 || b.check) {
                     pbox(b);
                     b.id = "";
                     b.bl = [];
+                    b.check = false;
                 } else if(gene.gl.length>0){
                     pgene(gene);
                 }
@@ -356,7 +372,23 @@ function setConnectPos(o,f) {
                 ll.length=0;
                 Array.prototype.push.apply(ll, llp);
             } else if(a = m_image.exec(cl)) { // imgの読み込み
-                var im = ( '<img src="'+a[2]+'" title='+a[1]+' />') ;
+                var im;
+                if(a[4]!=undefined){
+                    var style = [];
+                    var css = a[4].split(";");
+                    for(var i in css){
+                        if(css[i] != ""){
+                            var css2 = css[i].split(":");
+                            if(css2.length>1){
+                                style.push(css2[0].trim()+":"+css2[1].trim()+";");
+                            }
+                        }
+                    }
+                    console.info(style);
+                    im = ( '<img src="'+a[2]+'" title='+a[1]+' style="' + style.join(" ") + '"/>');
+                }
+                else {im = ( '<img src="'+a[2]+'" title='+a[1]+' />') ;
+                }
                 if(a[3]!=undefined) {
                     im = "<figure>"+im+"<figcaption>"+fontChange(a[3])+"</figcaption></figure>" ;
                 }
@@ -402,7 +434,7 @@ function setConnectPos(o,f) {
                     ll = [] ;
                     var fp = "r" ;
                     var tp = "l1" ;
-                    var ar = (a[2]!=undefined)?((a[5]!=undefined)?"b":"f"):((a[5]!=undefined)?"t":"") ; // 向き
+                    var ar = (a[2]!=undefined)?((a[6]!=undefined)?"b":"f"):((a[6]!=undefined)?"t":"") ; // 向き
                     if(a[1]!=undefined) fp = a[1] ;
                     if(a[7]!=undefined) tp = a[7] ;
                     // connectionの設定, geneでgeneid, gposで[u|d|l|r]
@@ -413,21 +445,28 @@ function setConnectPos(o,f) {
                 }
             }
             if(ll.length>0) l.push( ll.join("<br/>")) ;
+            else if(b.check) l.push(" ");
             if(l.length==1) l = l[0] ;
-            box.push( {id:b.id,inner:l,pos:b.pos,cls:b.cls,title:b.title} ) ;
+            box.push( {id:b.id,inner:l,pos:b.pos,cls:b.cls,title:b.title, size:b.size, css:b.css} ) ;
         }
         return {box:box, conn:conn, gene:genes} ;
     }
+    
     // boxを移動させた時にtextの座標も変更
     this.upd_text = function(text) {
         var l = text.split("\n") ;
         for(var i in l) {
             var cl = l[i] ;
-            var a ;
+            var a 
             if(cl=="") continue ;
             if(a = this.m_h.exec(cl)) {
                 var pos = (this.bpos[a[1]]!=undefined)?this.bpos[a[1]]:{x:a[3],y:a[4]} ;
-                l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+">" ;
+                var css = a[7] ? "css("+a[7]+")" : "";
+                if(a[5] && a[6]){
+                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+","+a[5]+","+a[6]+">"+css;
+                }else{
+                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+">"+css ;
+                }
             }
         }
         return l.join("\n") ;

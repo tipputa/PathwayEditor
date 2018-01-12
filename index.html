@@ -150,8 +150,57 @@ div.mdiv {
 <div id=sbase>
 <textarea id=source>
 // 最下部に簡単な説明あり
-// title
 //
+// additional part
+// 丸でmark
+[highlight] (mark) <5,40.5,15,15>
+
+[hl2] (mark) <7,40,30,30>
+
+[hl3] (mark) <10.5,39,50,50>css(border:blue solid 4px; )
+
+[hl5] <16.5,39,50,50>
+==>[hl6]
+
+[hl6] <21.5,39,50,50>css(background:none;border:4px solid blue; color:white; border-radius:100px;  box-shadow:none;z-index:20;)
+
+// gene like box
+[genebox1] (gene) <7,32>
+geneInfo1
+l==d[c1]
+==>d[c2]
+
+[genebox2] (gene) <7,34>
+geneInfo2
+l==d[c1]
+==>d[c2]
+
+[genebox3] (gene) <7,36>
+geneInfo3
+l=(l_w1)=d[c1]
+==>d[c2]
+
+// 背景無し
+[memoTest] (trans) <3,42.5>
+メモ、脚注として使用
+
+[memoTest2] (transB) <3.5,44>
+Border付き
+
+[memoTest3] (transB2) <10.5,44>
+Border付き2
+
+[memoTest4] <18.5,44>css(background:none; border:4px dashed #303F9F;box-shadow:none;)
+// color:http://materialuicolors.co/
+cssだけで変更
+
+[memoTest5] <4,46.5,200,100>css(background-color:#C5E1A5; border:3px double #558B2F; z-index:0)
+
+// backgroundにイメージの貼り付け
+[memoTest6] <30,52.5,400,300>css(background:none;;box-shadow:none;z-index:0;)
+![img](https://cdn.pixabay.com/photo/2014/10/05/10/55/milky-way-474931_960_720.jpg)css(max-width:600px; max-height:400px)
+
+
 [title] <0.5,0.5>
 #Glycerolipid Metabolome
 Example metabolic pathway map
@@ -389,7 +438,6 @@ Catalyzes the three sequential steps of the methylation pathway of phosphatidylc
 ?[kegg] (http://www.genome.jp/dbget-bin/www_bget?hsa:10400 "KEGG")
 </pop>
 
-
 // additional
 // Acyl-CoA
 [acylcoa1] (small8) <15.5,24.5>
@@ -438,6 +486,7 @@ catalyzes the three sequential steps
 //  _sxxs_で下付き (<sub>xx</sub>) 
 // 
 //
+
 </textarea>
 </div>
 <div class="mdiv">
