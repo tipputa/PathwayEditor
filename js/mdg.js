@@ -303,6 +303,9 @@ function setConnectPos(o,f) {
         var m_popStart = /^<pop>$/;
         var m_popEnd = /^<\/pop>$/;
         var m_title = /^#(.*)/ ;
+        var m_GL = /^!GL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
+        var m_PG = /^!PG\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for Phosphatidylglycerol
+        var m_CL = /^!CL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?}$/; // for Cardiolipin
 
         var l = text.split("\n") ;
         var b = {id:"",bl:[], check:false} ;
@@ -396,6 +399,56 @@ function setConnectPos(o,f) {
             } else if(a = m_ulink.exec(cl)) { // urlの読み込み
                 var url = "<a href="+a[2]+" target=\"_blank\">" + fontChange(a[3]) + "</a>";
                 ll.push(url);
+            } else if (a = m_GL.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                var txt = '\
+                <table align=center style="transform:translate(-6px, 10px)"> \
+                <tr><td rowspan=3><img src=img/GL2.png style=" height:40px;transform:translateX(16px);"/ ></td> \
+                <td nowrap align=left style="line-height:0%;">'+fontChange(R1)+'</td></tr> \
+                <tr><td nowrap align=left style="line-height:0%;">'+fontChange(R2)+'</td></tr> \
+                <tr><td nowrap align=left  style="line-height:0%;">' + fontChange(R3)+ '</td></tr></table>';
+                ll.push(txt);
+            }else if (a = m_PG.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                var txt = '\
+                <table align=center style="transform:translateY(10px)">\
+                <tr><td rowspan=3><img src=img/GL2.png style="height:50px;transform:translateX(18px);"/></td> \
+                <td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=center  style="line-height:50%;">'+fontChange(R3)+'</td>\
+                <td rowspan=3><img src=img/GLRev.png style=" height:50px;transform:translateX(-18px) rotate(180deg);"/ ></td></tr>\
+                <tr><td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R4)+'</td></tr> \
+                <td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R5)+'</td></tr></table>'
+                ll.push(txt);
+
+            } else if(a = m_CL.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                R6 = a[6]?a[6]:"";
+                R7 = a[7]?a[7]:"";
+
+                var txt = '\
+                <table align=center style="transform:translateY(10px)"> \
+                <tr><td rowspan=3><img src=img/GL2.png style=" height:50px;transform:translateX(18px);"/ ></td>\
+                <td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=center  style="line-height:50%;">'+fontChange(R3)+'</td>\
+                <td rowspan=3><img src=img/GLRev.png style="height:50px;transform:translateX(-18px) rotate(180deg);"/ ></td></tr>\
+                <tr><td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R4)+'</td></tr>\
+                <td rowspan=3><img src=img/GL2.png style=" height:50px;transform:translateX(18px);"/ ></td> \
+                <td nowrap align=right style="line-height:50%;">'+fontChange(R5)+'</td>\
+                </tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R6)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R7)+'</td></tr> </table>'    
+                ll.push(txt);
             } else { // その他のテキスト
                 cl = fontChange(cl);
                 ll.push(cl) ;
@@ -513,14 +566,35 @@ $(function() {
 
     //初期化
     var b = new mdg_draw($('#base')) ;
+	var p = loadlocal() ;
+	if(p) {
+		$('#source').val( p.source ) ;
+		$('#i_fname').val(p.fname ) ;
+	}
 	var data = b.parse($('#source').val())  ;
 	b.setobj(data,true) ;
+	
+    // load localStorage
+	function loadlocal() {
+		var ret = null ;
+		if(p = window.localStorage.getItem("mdg")) {
+			if(JSON.parse(p) && JSON.parse(p).sources) {
+				ret = JSON.parse(p).sources[0] ;
+			}
+		}
+		return ret ;
+	}
+	// localStorageにsourceをsave
+	function savelocal(s) {
+		window.localStorage.setItem("mdg",JSON.stringify({sources:[s]})) ;
+	}
     
     // souceの値が変更された場合それを反映させる
 	$('#source').on('input',function() {
 		var s = $(this).val() ;
 		data = b.parse(s) ;
 		b.setobj(data) ;
+        savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 	})
     
     // box drag時の処理
@@ -550,6 +624,7 @@ $(function() {
         // sourceのtxtを更新
 		var s = b.upd_text($('#source').val()) ;
 		$('#source').val(s) ;
+        savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 		return false ;
 	})
 	
