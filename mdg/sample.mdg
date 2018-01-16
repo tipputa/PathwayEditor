@@ -1,0 +1,20 @@
+// 最下部に簡単な説明あり
+//
+// additional part
+// 丸でmark
+[test] <8,6>
+!GL{OH |OH|OH}
+glycerol
+
+[test2] <18,6>
+!GL{OH |OH|PO_s3s_}
+G3P
+
+[test3] <19.5,19.5>
+!GL{OH |OH|PO_s3s_}
+ 
+
+[test4] <18.5,12>
+!GL{O-CO |OH|P<tag style="color:red">O_s3s_</tag>}
+ 
+
