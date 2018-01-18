@@ -233,31 +233,46 @@ function setConnectPos(o,f) {
     var sy = parseInt(o.css('top')) ;
     var w = parseInt(o.css('width')) ;
     var h = parseInt(o.css('height')) ;
+    var tagName = o.prop("tagName");	
     var px,py,vx,vy ;
     var t = $('tr',o) ;
     var d = $('th,td',o) ;
-    if(t.length>0 && f.match(/(l|r)([0-9]+)/)) {
-        vy = 0 ;
-        if(RegExp.$1=="l") {
-            px = sx ;
-            vx = -1 ;
-        } else if(RegExp.$1=="r") {
-            px = sx+w ;
-            vx = 1 ;
+    if(tagName == "TABLE"){
+        if(t.length>0 && f.match(/(l|r)([0-9]+)/)) {
+            vy = 0 ;
+            if(RegExp.$1=="l") {
+                px = sx ;
+                vx = -1 ;
+            } else if(RegExp.$1=="r") {
+                px = sx+w ;
+                vx = 1 ;
+            }
+            var tn = RegExp.$2-1 ;
+            py = sy + t[tn].offsetTop+t[tn].offsetHeight/2 ;
+        } else if(d.length>0 && f.match(/(u|d)([0-9]+)/)) {
+            vx = 0 ;
+            if(RegExp.$1=="u") {
+                py = sy ;
+                vy = -1 ;
+            } else if(RegExp.$1=="d") {
+                py = sy+h ;
+                vy = 1 ;
+            }
+            var tn = (RegExp.$2!=undefined)?RegExp.$2-1:0 ;
+            px = sx + d[tn].offsetLeft+d[tn].offsetWidth/2 ;
+        } else {
+            switch(f.substr(0,1)) {
+                case 'u':
+                    px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
+                case 'd':
+                    px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
+                case 'l':
+                    px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
+                case 'r':
+                    px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
+                default:
+            }
         }
-        var tn = RegExp.$2-1 ;
-        py = sy + t[tn].offsetTop+t[tn].offsetHeight/2 ;
-    } else if(d.length>0 && f.match(/(u|d)([0-9]+)/)) {
-        vx = 0 ;
-        if(RegExp.$1=="u") {
-            py = sy ;
-            vy = -1 ;
-        } else if(RegExp.$1=="d") {
-            py = sy+h ;
-            vy = 1 ;
-        }
-        var tn = (RegExp.$2!=undefined)?RegExp.$2-1:0 ;
-        px = sx + d[tn].offsetLeft+d[tn].offsetWidth/2 ;
     } else {
         switch(f.substr(0,1)) {
             case 'u':
@@ -387,7 +402,6 @@ function setConnectPos(o,f) {
                             }
                         }
                     }
-                    console.info(style);
                     im = ( '<img src="'+a[2]+'" title='+a[1]+' style="' + style.join(" ") + '"/>');
                 }
                 else {im = ( '<img src="'+a[2]+'" title='+a[1]+' />') ;
@@ -410,6 +424,7 @@ function setConnectPos(o,f) {
                 <tr><td nowrap align=left style="line-height:0%;">'+fontChange(R2)+'</td></tr> \
                 <tr><td nowrap align=left  style="line-height:0%;">' + fontChange(R3)+ '</td></tr></table>';
                 ll.push(txt);
+                
             }else if (a = m_PG.exec(cl)){
                 R1 = a[1]?a[1]:"";
                 R2 = a[2]?a[2]:"";
