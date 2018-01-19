@@ -1,5 +1,12 @@
 /* mdg basic css*/
 div.mdg {
+user-select:none;
+-webkit-user-select:none;
+-ms-user-select: none;
+-moz-user-select:none;
+-khtml-user-select:none;
+-webkit-user-drag:none;
+-khtml-user-drag:none;
 	position:relative ;
 	box-sizing:border-box;
 }
@@ -59,7 +66,7 @@ div.mdg .gene {
 }
 
 div.mdg .rectangle{
-    background: rgba(255, 0, 0, 0.47);
+    background: rgba(255, 166, 166, 0.38);
     border: 1px solid red;
     position: absolute;
 }
@@ -423,6 +430,7 @@ div.mdg .box:hover, div.mdg .label:hover{
  
 /* マウスオーバー時にツールチップを表示 */
 div.mdg .box:hover span, .label:hover span{
+    user-select: text;
     display: block;                  /* ボックス要素にする */
     position: absolute;            /* relativeからの絶対位置 */
     top:auto;
