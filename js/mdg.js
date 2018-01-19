@@ -723,6 +723,7 @@ $(function() {
         var oe = ev.originalEvent ;
         $(this).addClass("active");
         b.dragDrop = {preX:parseFloat(oe.pageX), preY:parseFloat(oe.pageY)};
+        oe.dataTransfer.setData('forFireFox', this);
 	})
 	$('#base').on("dragenter dragover",function(){
 		return false ;
