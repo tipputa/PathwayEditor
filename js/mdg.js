@@ -5,6 +5,7 @@ var mdg_draw = function(_base) {
     this.bpos = {} ; // boxのinfo保存用
     this.em = parseInt($('html').css('font-size')) ; // 基準とするフォントサイズ
     this.genebase = []; // gene infoの保存用
+    this.dragDrop = {};
     var lp,le ; // boxの初期位置情報。随時更新される。
 
     // dataをセット (this.create, this.setgene) -> redraw
@@ -294,8 +295,61 @@ function setConnectPos(o,f) {
     
     // handlerで使用。boxのdrag&drop時に値を返す。
     this.setpos = function(id,x,y) {
-        this.bpos[id] = {x:parseFloat(x),y:parseFloat(y)} ;
+        var px = parseFloat(x)>0?parseFloat(x):1;
+        var py = parseFloat(y)>0?parseFloat(y):1;        
+        this.bpos[id] = {x:px,y:py} ;
     }
+    
+    this.changeAllPos = function(opt){
+        var addX, addY, size = 2;
+        switch (opt){
+            case "L": addX = -size; addY = 0; break;
+            case "R": addX = size; addY = 0; break;
+            case "D": addX = 0; addY = size; break;
+            case "U": addX = 0; addY = -size; break;
+        }
+        for(var id in this.bpos) {　// boxの位置情報を更新
+            var px = parseFloat(this.bpos[id].x) + addX;
+            var py = parseFloat(this.bpos[id].y) + addY;
+            if(px>=0 && py >= 0)this.bpos[id] = {x:px, y:py};
+        }
+    }
+    
+    this.select = function(rect){
+        this.deact()
+        var l = parseFloat(rect.css("left"))/this.em;
+        var t = parseFloat(rect.css("top"))/this.em;
+        var w = parseFloat(rect.css("width"))/this.em;
+        var h = parseFloat(rect.css("height"))/this.em;
+        for(var id in this.bpos){
+            if(this.bpos[id].x > l && this.bpos[id].x < l+w && this.bpos[id].y > t && this.bpos[id].y < t+h){
+                $('#'+id).addClass("active");
+            }
+        }
+    }
+    
+    this.deact = function(){
+        for(var id in this.bpos){
+            if($('#'+id).hasClass("active")){
+                $('#'+id).removeClass("active");
+            }
+        }
+    }
+    
+    this.drop = function(mag){
+        var ox = (this.dragDrop.pX - this.dragDrop.preX)/mag ;
+        var oy = (this.dragDrop.pY - this.dragDrop.preY)/mag ;
+        for(var id in this.bpos){
+            if($('#'+id).hasClass("active")){
+                var ex = parseInt($('#'+id).css("left")) ;
+                var ey = parseInt($('#'+id).css("top")) ;                
+                var px = Math.floor(((ex+ox)/this.em+0.25)*2)/2 ;
+                var py = Math.floor(((ey+oy)/this.em+0.25)*2)/2 ;
+                this.setpos(id,px,py) ;
+            }
+        }
+    }
+    
     
 
     // text 関連
@@ -579,6 +633,19 @@ $(function() {
         $('#base').css(($(this).attr('id')=="size_x")?'width':'height',parseInt($(this).val())+"px") ;
 	})
 
+    // transLocate by arrow
+    var type = "<div>";
+    var arrL = $(type).addClass("arrow transL").attr('id',"transL");
+    var arrR = $(type).addClass("arrow transR").attr('id',"transR");
+    var arrD = $(type).addClass("arrow transD").attr('id',"transD");
+    var arrU = $(type).addClass("arrow").attr('id',"transU");
+    $('#control').append(arrL);
+    $('#control').append(arrR);
+    $('#control').append(arrD);
+    $('#control').append(arrU);
+
+    
+    
     //初期化
     var b = new mdg_draw($('#base')) ;
 	var p = loadlocal() ;
@@ -612,37 +679,62 @@ $(function() {
         savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 	})
     
+    var rectangle;
+	$(document).on("mousedown",'#base',function(ev){
+        var oe = ev.originalEvent ;
+		rectangle = oe.pageX+"/"+oe.pageY;
+        var px = (oe.pageX - $("#base").offset().left)/mag;
+        var py = (oe.pageY - $("#base").offset().top)/mag;
+        var e = $("<div>").addClass("rectangle").attr("id", "rect").css("left", px + "px").css("top", py+"px").css("width","0px").css("height", "0px");
+       $('#base').append(e); 
+    }).on("mousemove", function(ev){
+        if(rectangle){
+        var k = rectangle.split("/") ;
+        var w = (ev.originalEvent.pageX - k[0])/mag;
+        var h = (ev.originalEvent.pageY - k[1])/mag;
+        $("#rect").css("width", w+"px").css("height", h+"px");
+    }}).on("mouseup",function(){
+        b.select($("#rect"));
+        $("#rect").remove();
+        rectangle=undefined;
+    });
+    
     // box drag時の処理
 	$(document).on("dragstart",'#base .box',function(ev){
-		var oe = ev.originalEvent ;
-		ev.originalEvent.dataTransfer.setData("text",$(this).attr('id')+"/"+oe.pageX+"/"+oe.pageY);
+        $("#rect").remove();        
+        var oe = ev.originalEvent ;
+        $(this).addClass("active");
+        b.dragDrop = {preX:parseFloat(oe.pageX), preY:parseFloat(oe.pageY)};
 	})
 	$('#base').on("dragenter dragover",function(){
 		return false ;
 	}).on("drop",function(ev){
 		var oe = ev.originalEvent ;
-		var k = ev.originalEvent.dataTransfer.getData("text").split("/") ;
-		var id = k[0] ;
-		
-		var ox = (oe.pageX-k[1])/mag ;
-		var oy = (oe.pageY-k[2])/mag ;
-		var em = parseInt($('html').css('font-size')) ;
-
-		var ex = parseInt($('#'+id).css("left")) ;
-		var ey = parseInt($('#'+id).css("top")) ;
-		var px = Math.floor(((ex+ox)/em+0.25)*2)/2 ;
-		var py = Math.floor(((ey+oy)/em+0.25)*2)/2 ;
-
-		b.setpos(id,px,py) ;
-		b.redraw(data) ;
-        
-        // sourceのtxtを更新
+        b.dragDrop = {preX: b.dragDrop.preX, preY:b.dragDrop.preY, pX: parseFloat(oe.pageX), pY:parseFloat(oe.pageY)};
+        b.drop(mag);
+        b.redraw(data);
 		var s = b.upd_text($('#source').val()) ;
 		$('#source').val(s) ;
         savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+
 		return false ;
 	})
-	
+    
+    $('.arrow').on("click", function(){
+        var tmpId = $(this).attr('id');
+        var a;
+        switch (tmpId){
+            case 'transL': a = "L"; break;   
+            case 'transD': a = "D"; break;   
+            case 'transR': a = "R"; break;   
+            case 'transU': a = "U"; break;   
+        }
+        b.changeAllPos(a);
+        b.redraw(data);
+		var s = b.upd_text($('#source').val()) ;
+		$('#source').val(s) ;
+    });
+    	
     // load
 	$('#b_load').on("click",function() {
 		$('#f_load').click() ;

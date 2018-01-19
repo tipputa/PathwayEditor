@@ -100,6 +100,32 @@ div.resbar_h {
 div.mdiv {
 	margin:5px ;
 }
+div.arrow{
+    width: 0px;
+    height: 0px;
+    display:inline-block;
+    vertical-align:middle;
+	/* borderをうまく使って三角形を描く (高さ: 45px, 横幅: 28×2=56px) */
+    border-bottom: solid 15px white;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+    transform: scaleX(0.9);
+    padding:0;
+    background-color:inherit;
+    }
+div.transL{
+    transform: rotate(-90deg) scaleX(0.9);
+}
+div.transR{
+    transform: rotate(90deg) scaleX(0.9);
+}
+div.transD{
+    transform: rotate(180deg) scaleX(0.9);
+}
+div.arrow:hover{
+    border-bottom: solid 15px #ECEFF1;
+}
+
 </style>
 <style id=szoom>
 #base {
@@ -140,7 +166,6 @@ div.mdiv {
 	}
 }
 </style>
-<link rel="stylesheet" type="text/css" href="css/custom.css">
 </head>
 <body>
 <div id=main>
