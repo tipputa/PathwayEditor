@@ -633,6 +633,22 @@ $(function() {
         $('#base').css(($(this).attr('id')=="size_x")?'width':'height',parseInt($(this).val())+"px") ;
 	})
 
+	// ブラウザチェック, localStorageに対応していない場合はfalse
+	var checker = true;
+	var userAgent = window.navigator.userAgent.toLowerCase();
+	if(userAgent.indexOf('msie') != -1 || userAgent.indexOf('trident') != -1) {
+		checker = false;
+	} else if(userAgent.indexOf('edge') != -1) {
+	} else if(userAgent.indexOf('chrome') != -1) {
+	} else if(userAgent.indexOf('safari') != -1) {
+		checker = false;
+	} else if(userAgent.indexOf('firefox') != -1) {
+	} else if(userAgent.indexOf('opera') != -1) {
+	} else {
+    checker=false;
+}
+
+
     // transLocate by arrow
     var type = "<div>";
     var arrL = $(type).addClass("arrow transL").attr('id',"transL");
@@ -648,10 +664,12 @@ $(function() {
     
     //初期化
     var b = new mdg_draw($('#base')) ;
-	var p = loadlocal() ;
-	if(p) {
-		$('#source').val( p.source ) ;
-		$('#i_fname').val(p.fname ) ;
+	if(checker){
+		var p = loadlocal() ;
+		if(p) {
+			$('#source').val( p.source ) ;
+			$('#i_fname').val(p.fname ) ;
+		}
 	}
 	var data = b.parse($('#source').val())  ;
 	b.setobj(data,true) ;
@@ -676,7 +694,7 @@ $(function() {
 		var s = $(this).val() ;
 		data = b.parse(s) ;
 		b.setobj(data) ;
-        savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+        if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 	})
     
     var rectangle;
@@ -715,7 +733,7 @@ $(function() {
         b.redraw(data);
 		var s = b.upd_text($('#source').val()) ;
 		$('#source').val(s) ;
-        savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+        if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 
 		return false ;
 	})
