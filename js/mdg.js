@@ -126,7 +126,7 @@ var mdg_draw = function(_base) {
 
                     // geneが複数回使われるかもしれないため、idにcount情報追加。
                     var newid = id + "_" + gene.count;
-                    g = $("<div>").addClass("label").attr("id", newid).html(gene.inner).css('left', mp.x+"px").css('top',mp.y+"px");
+                    g = $("<div>").addClass("label").attr("title",id).attr("id", newid).html(gene.inner).css('left', mp.x+"px").css('top',mp.y+"px");
                     this.base.append(g);
                     gene.count = gene.count + 1;
                     
@@ -349,7 +349,14 @@ function setConnectPos(o,f) {
             }
         }
     }
-    
+    function strHeight(str, width) {
+      var e = $("#ruler").css("width", width);
+      var height = e.text(str).get(0).offsetHeight;
+      e.empty();
+        console.info(height);
+      return height;
+    }
+
     
 
     // text 関連
@@ -574,6 +581,20 @@ function setConnectPos(o,f) {
         return {box:box, conn:conn, gene:genes} ;
     }
     
+    this.searchPosition = function(text,w,tag){
+        var l = text.split("\n") ;
+        var height = 0;
+        var heightTmp;
+        for(var i in l) {
+            var cl = l[i];
+            if(cl.match(tag)){break;}
+            if(cl == "") height = height + 16*1.2;
+            else {heightTmp = strHeight(cl, parseFloat(w));height = height + heightTmp;}
+        }
+        console.info(height);
+        return height;
+    }
+
     // boxを移動させた時にtextの座標も変更
     this.upd_text = function(text) {
         var l = text.split("\n") ;
@@ -715,6 +736,18 @@ $(function() {
         b.select($("#rect"));
         $("#rect").remove();
         rectangle=undefined;
+    });
+    
+    $(document).on('dblclick', '#base .label, #base .box', function(){
+        var str = $(this)[0].title;
+        var s = new RegExp("^g?\\[" + str+"\\]");
+        console.info(s);
+        var p = b.searchPosition($('#source').val(), $('#source').css("width"),s);
+        //var p = $("移動させたいIDまたはCLASS").offset().top;
+        $('#source').animate({ scrollTop: p }, 'slow');
+        var e = $("<div>").addClass("highlight").attr("id","highlight").html("["+str+"]");
+        $('#sbase').append(e);
+        setTimeout(function(){$('#highlight').remove()},2000)
     });
     
     // box drag時の処理
