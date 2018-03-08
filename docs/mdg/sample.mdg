@@ -1,0 +1,342 @@
+// 最下部に簡単な説明あり
+//
+// additional part
+// 丸でmark
+[highlight] (mark) <5,40.5,15,15>
+
+[hl2] (mark) <7,40,30,30>
+
+[hl3] (mark) <10.5,39,50,50>css(border:blue solid 4px; )
+
+[hl5] <16.5,39,50,50>
+==>[hl6]
+
+[hl6] <21.5,39,50,50>css(background:none;border:4px solid blue; color:white; border-radius:100px;  box-shadow:none;z-index:20;)
+
+// gene like box
+[genebox1] (gene) <7,32>
+geneInfo1
+l==d[c1]
+==>d[c2]
+
+[genebox2] (gene) <7,34>
+geneInfo2
+l==d[c1]
+==>d[c2]
+
+[genebox3] (gene) <7,36>
+geneInfo3
+l=(l_w1)=d[c1]
+==>d[c2]
+
+// 背景無し
+[memoTest] (trans) <3,42.5>
+メモ、脚注として使用
+
+[memoTest2] (transB) <3.5,44>
+Border付き
+
+[memoTest3] (transB2) <10.5,44>
+Border付き2
+
+[memoTest4] <18.5,44>css(background:none; border:4px dashed #303F9F;box-shadow:none;)
+// color:http://materialuicolors.co/
+cssだけで変更
+
+[memoTest5] <4,46.5,200,100>css(background-color:#C5E1A5; border:3px double #558B2F; z-index:0)
+
+// backgroundにイメージの貼り付け
+[memoTest6] <30,52.5,400,300>css(background:none;;box-shadow:none;z-index:0;)
+![img](https://cdn.pixabay.com/photo/2014/10/05/10/55/milky-way-474931_960_720.jpg)css(max-width:600px; max-height:400px)
+
+
+[triangle2] (triangle) <22,36> css(border-bottom-color:red; transform: rotate(180deg;)
+ 
+[triangle1] (triangle) <25,36> 
+  
+[title] <0.5,0.5>
+#Glycerolipid Metabolome
+Example metabolic pathway map
+References:
+?[link] (http://www.genome.jp/kegg-bin/show_pathway?map=map00561&show_description=show "KEGG GLYCEROLIPID METABOLISM")
+---
+?[link] (http://www.genome.jp/kegg-bin/show_pathway?map00564 "KEGG: GLYCEROPHOSPHOLIPID METABOLISM")
+
+//
+// compound information 
+//
+// Glycerol
+[c1] (image100 TC) <1.5,27>
+Glycerol
+<pop>
+![image](img/c1.png "glycerol")
+?[link](http://www.genome.jp/dbget-bin/www_bget?C00116 "KEGG")
+</pop>
+=[g1]d(S l_w3)=>[c2]
+<=[g2]u=[c2]
+
+// G3P
+[c2] <13.5,27>
+ G3P
+<pop>
+![image] (img/c2.png "__sn__-glycerol 3-phosphate")
+?[link] (http://www.genome.jp/dbget-bin/www_bget?C00681 "KEGG")
+</pop>
+=[g3](l_w3)=>[c3]
+
+
+//Acetyl-G3P
+[c3] <23.5,27>
+Acyl-G3P
+<pop>
+![image] (img/c3.png "1-Acyl-__sn__-glycerol 3-phosphate")
+</pop>
+=[g4](l_w3)=>[c4]
+
+
+// Ptd-acid
+[c4] (image200) <36.5,23.8>
+![image](img/c4.png)
+?[link to LB list](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPA "Phosphatidic acid")
+<font size="1em"> link to LBGPA list in LIpidBank Wiki</font>
+<pop>
+?[link] (http://www.genome.jp/dbget-bin/www_bget?C00416 "KEGG")
+</pop>
+d=[g8](l_w3)=>u[c5]
+u=[g5](S l_w3)=>d[c6]
+
+
+// diacyl-glycerol
+[c5] (image200) <36.5,37>
+![image] (img/c5.png "1,2-diacyl-__sn__-glycerol")
+d=[g14](S l_w3)=>u[c10]
+
+//CDP-diacetylglycerol
+[c6] (image200) <36.5,13>
+<img width="200px" src=img/c6.png></img>
+CDP-diacetylglycerol
+<pop>
+![img](img/c6_2.GIF) 
+?[l] (http://www.genome.jp/dbget-bin/www_bget?C00269 "KEGG")
+</pop>
+=[g6](l_w3)=>[c7]
+=[g7](l_w1)=>[c8]
+l=[g11](S l_w2)=>r[c12]
+
+//PI
+[c7] (image200) <57.5,3.5>
+![image] (img/c7.png)
+?[lipidBank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPI "Phosphatidyl-inositol")
+<font size="1em"> link to LBGPI list in LIpidBank Wiki</font>
+<pop>
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?C01194 "KEGG")
+</pop>
+
+
+//PS
+[c8] (image) <57.5,18.5>
+![image] (img/c8.png)
+?[lipidBank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPS "Phosphatidyl-serine")
+<font size="1em"> link to LBGPS list in LIpidBank Wiki</font>
+
+
+// PE
+[c9] (image) <58,36.5>
+![image] (img/c9.png)
+?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPE "Phosphatidyl-ethanolamine")
+<font size="1em"> link to LBGPE list in LIpidBank Wiki</font>
+l<=[g9](l_w3)=r[c5]
+u=[g10](S l_w3)=>d[c8]
+d=(l_w3)=>r[c10]
+
+// PC
+[c10] (image) <33,54.5>
+![image] (img/c10.png)
+?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPC "Phosphatidyl-choline")
+<font size="1em"> link to LBGPC list in LIpidBank Wiki</font>
+
+
+//PG
+[c11] (image200) <2,11>
+![image] (img/c11.png)
+?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPG "Phosphatidyl-glycerol")
+<font size="1em"> link to LBGPG list in LIpidBank Wiki</font>
+
+[c12] <21.5,15>
+Ptd-G-phosphate
+<pop>
+Phosphatidylglycerophosphate
+</pop>
+l=[g12](l_w2)=>r[c11]
+
+// gene information
+// g1 glycero 
+g[g1]
+GK
+?[link](http://www.uniprot.org/uniprot/P32189 "2.7.1.30")
+<pop>
+<nobr>glycerol kinase</nobr>
+<nobr>ATP -> ADP</nobr>
+?[link] (http://www.genome.jp/dbget-bin/www_bget?K00864+2.7.1.30+R00847 "KEGG")
+?[link] (https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=COG0554 "COG")
+</pop>
+
+
+
+//g2
+g[g2]
+GPP1
+?[link] (http://www.uniprot.org/uniprot/P32189 "3.1.3.21")
+<pop>
+<nobr>glycerol 3-phosphatase 1</nobr>
+?[link](https://www.ncbi.nlm.nih.gov/Structure/cdd/cddsrv.cgi?uid=COG0554 "COG")
+?[link] (http://www.genome.jp/dbget-bin/www_bget?K06116+K06117+3.1.3.21+R00841 "KEGG")
+</pop>
+
+
+// g3 glycerol-3-phosphate O-acyltransferase
+g[g3]
+GPAT
+?[link](http://www.uniprot.org/uniprot/Q53EU6 "2.3.1.15")
+<pop>
+<nobr> glycerol-3-phosphate O-acyltransferase</nobr>
+?[link](http://www.genome.jp/dbget-bin/www_bget?K00629+K13506+K13507+K00630+K13508+K00631+K03621+K08591+2.3.1.15+R00851 "KEGG")
+</pop>
+
+
+//g4 
+g[g4]
+AGPAT
+?[link] (http://www.uniprot.org/uniprot/Q99943 "2.3.1.51")
+<pop>
+<nobr>1-acyl-__sn__-glycerol-3-phosphate acyltransferase</nobr>
+</pop>
+
+g[g5]
+CDS
+?[uni] (http://www.uniprot.org/uniprot/Q92903 "2.7.7.41")
+<pop>
+<nobr>Phosphatidate cytidylyltransferase</nobr>
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?K00981+2.7.7.41+R01799 "KEGG")
+</pop>
+
+g[g6]
+CDIPT
+?[uniprot] (http://www.uniprot.org/uniprot/O14735 "2.7.8.11")
+<pop>
+<nobr>CDP-diacylglycerol--inositol 3-phosphatidyltransferase</nobr>
+<nobr>inositol -> CMP</nobr>
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?K00999+2.7.8.11+R01802 "KEGG")
+</pop>
+
+g[g7]
+CHO1
+2.7.8.8
+(__E. coli__, yeast)
+<pop>
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?K17103+K00998+2.7.8.8+R01800 "KEGG")
+</pop>
+
+g[g8]
+PLPP
+?[uni] (http://www.uniprot.org/uniprot/O14495 "3.1.3.4")
+<pop>
+<nobr>Phosphatidate phosphatase</nobr>
+</pop>
+
+g[g9]
+CEPT1
+?[uni] (http://www.uniprot.org/uniprot/Q9Y6K0 "2.7.8.1")
+<pop>
+<nobr>Choline/ethanolaminephosphotransferase</nobr>
+</pop>
+
+g[g10]
+PTDSS1
+?[uni] (http://www.uniprot.org/uniprot/P48651 "2.7.8.29")
+<pop>
+<nobr>Phosphatidylserine synthase 1</nobr>
+</pop>
+
+g[g11]
+PGS1
+?[uni] (http://www.uniprot.org/uniprot/Q32NB8 "2.7.8.5")
+<pop>
+CDP-diacylglycerol--glycerol-3-phosphate 3-phosphatidyltransferase, mitochondrial
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?K00995+2.7.8.5+R01801 "KEGG")
+</pop>
+
+g[g12]
+?[uni](http://www.uniprot.org/uniprot/Q8WUK0 "3.1.3.27")
+<pop>
+Phosphatidylglycerophosphate
+?[link] (http://www.genome.jp/dbget-bin/www_bget?K01094+K01095+K01096+K18697+3.1.3.27+R02029 "KEGG")
+</pop>
+
+g[g13]
+CHPT1
+?[uni] (http://www.uniprot.org/uniprot/Q8WUD6 "2.7.8.2")
+<pop>
+<nobr>_*Cholinephosphotransferase 1*_</nobr>
+Catalyzes phosphatidylcholine biosynthesis from CDP-choline. It thereby plays a central role in the formation and maintenance of vesicular membranes.
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?hsa:10390+hsa:56994 "KEGG")
+</pop>
+
+g[g14]
+PEMT
+?[uni] (http://www.uniprot.org/uniprot/Q9UBM1 "2.1.1.17")
+<pop>
+<nobr>_*Phosphatidylethanolamine N-methyltransferase*_</nobr>
+Catalyzes the three sequential steps of the methylation pathway of phosphatidylcholine biosynthesis, the SAM-dependent methylation of phosphatidylethanolamine (PE) to phosphatidylmonomethylethanolamine (PMME), PMME to phosphatidyldimethylethanolamine (PDME), and PDME to phosphatidylcholine (PC).
+?[kegg] (http://www.genome.jp/dbget-bin/www_bget?hsa:10400 "KEGG")
+</pop>
+
+// additional
+// Acyl-CoA
+[acylcoa1] (small8) <15.5,24.5>
+Acyl-CoA
+d==>[c3]
+
+[acylcoa2] (small8) <28,24.5>
+Acyl-CoA
+d==>[c4]
+
+[cdpcholine] <65,51>
+CDP-choline
+l=[g13]=>r[c10]
+
+[memo1] (trans) <43.5,46>
+catalyzes the three sequential steps
+
+//
+//
+// [name]: ブロック(化合物)の定義
+// g[name] : 遺伝子の定義
+// ==> : ブロック間のリンク; 
+//    =[geneID](class)=>[boxID]: geneIDを間に
+//    u<=[gene]u(class)=>d [boxID]: udlrで上下左右
+//
+//
+//ポップアップ
+// <pop> 
+// 間がマウスオーバー時にポップアップ
+// </pop> 
+//
+//URL link
+// ?[**] (url "name") 
+//
+//image
+//  ![**] (path_to_image "name")
+//
+//class名を指定でcss変更; 適宜()内に記載
+//  色系: red, blue, trans (透明) etc. 
+//  block info: image (width:300px), image100 (width100px) //  line info: l_w2 (width: 2px), l_w5 (width: 5px)
+//  等々。適宜css側に追加
+//
+//文字修飾
+//  underbar2つ囲み(__xx__)でイタリック(<i>xx</i>)
+//  _*xx*_で太文字 (<strong>xx</strong>)
+//  _sxxs_で下付き (<sub>xx</sub>) 
+// 
+//
+
