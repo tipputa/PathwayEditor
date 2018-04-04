@@ -42,7 +42,6 @@ $(function() {
 
     $( 'input[name="radio-1"]:radio' ).change( function() {
        $('#inputName').load("../" + $(this).val(), function() {
-            console.info($('#inputName').val());
        	    data = b.parse($('#inputName').val());
        	    $('#source').val($('#inputName').val());
             b.setobj(data, true);
