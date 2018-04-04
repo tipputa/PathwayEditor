@@ -18,22 +18,6 @@ $(function() {
         $('#base').css(($(this).attr('id')=="size_x")?'width':'height',parseInt($(this).val())+"px") ;
 	})
 
-	// ブラウザチェック, localStorageに対応していない場合はfalse
-	var checker = true;
-	var userAgent = window.navigator.userAgent.toLowerCase();
-	if(userAgent.indexOf('msie') != -1 || userAgent.indexOf('trident') != -1) {
-		checker = false;
-	} else if(userAgent.indexOf('edge') != -1) {
-	} else if(userAgent.indexOf('chrome') != -1) {
-	} else if(userAgent.indexOf('safari') != -1) {
-		checker = false;
-	} else if(userAgent.indexOf('firefox') != -1) {
-	} else if(userAgent.indexOf('opera') != -1) {
-	} else {
-    checker=false;
-}
-
-
     // transLocate by arrow
     var type = "<div>";
     var arrL = $(type).addClass("arrow transL").attr('id',"transL");
@@ -46,41 +30,29 @@ $(function() {
     $('#control').append(arrU);
 
     
-    
     //初期化
+    var b = new mdg_draw($('#base')) ;
+    var data = "";
     var inputStr = $('#inputName').val().replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'');
-   console.info(inputStr)
 	    $('#source').load(inputStr, function() {
-        	console.info($('#source').val());
-        	var data = b.parse($('#source').val());
+            b = new mdg_draw($('#base')) ;
+        	data = b.parse($('#source').val());
 	        b.setobj(data, true) ;
     });
 
-    var b = new mdg_draw($('#base')) ;
-	var data = b.parse($('#source').val())  ;
-	b.setobj(data,true) ;
-	
-    // load localStorage
-	function loadlocal() {
-		var ret = null ;
-		if(p = window.localStorage.getItem("mdg")) {
-			if(JSON.parse(p) && JSON.parse(p).sources) {
-				ret = JSON.parse(p).sources[0] ;
-			}
-		}
-		return ret ;
-	}
-	// localStorageにsourceをsave
-	function savelocal(s) {
-		window.localStorage.setItem("mdg",JSON.stringify({sources:[s]})) ;
-	}
-    
+    $( 'input[name="radio-1"]:radio' ).change( function() { 
+       $('#source').load("../" + $(this).val(), function() {
+            b = new mdg_draw($('#base')) ;
+       	    data = b.parse($('#source').val());
+            b.setobj(data, true) ;
+        });
+    });  
+	    
     // souceの値が変更された場合それを反映させる
 	$('#source').on('input',function() {
 		var s = $(this).val() ;
 		data = b.parse(s) ;
 		b.setobj(data) ;
-        if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 	})
     
     var rectangle;
@@ -106,7 +78,6 @@ $(function() {
     $(document).on('dblclick', '#base .label, #base .box', function(){
         var str = $(this)[0].title;
         var s = new RegExp("^g?\\[" + str+"\\]");
-        console.info(s);
         var p = b.searchPosition($('#source').val(), $('#source').css("width"),s);
         //var p = $("移動させたいIDまたはCLASS").offset().top;
         $('#source').animate({ scrollTop: p }, 'slow');
@@ -132,7 +103,6 @@ $(function() {
         b.redraw(data);
 		var s = b.upd_text($('#source').val()) ;
 		$('#source').val(s) ;
-        if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 
 		return false ;
 	})

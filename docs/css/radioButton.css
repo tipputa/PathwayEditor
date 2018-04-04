@@ -1,5 +1,3 @@
-
-<style type="text/css">
 .toggle-buttons {
   display: flex;
 }
@@ -82,16 +80,3 @@ _:-ms-lang(x)::-ms-backdrop, .toggle-buttons [type=checkbox] {
   opacity: .6;
   color: #def;
 }
-</style>
-<form>
-  <div class="toggle-buttons">
-    <label>
-      <input type="radio" id="mdg1" name="radio-1" value="mdg/GL_List.mdg">
-      <span class="button">Radio (required)</span>
-    </label>
-    <label>
-      <input type="radio" id="mdg2" name="radio-1" value="mdg/sample.mdg">
-      <span class="button">Radio</span>
-    </label>
-  </div>
-</form>

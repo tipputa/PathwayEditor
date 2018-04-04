@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>MarkDownPathwayEditor</title>
 <link rel="stylesheet" type="text/css" href="../css/mdg.css">
+<link rel="stylesheet" type="text/css" href="../css/radioButton.css">
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/mdg.js"></script>
 <script type="text/javascript" src="../js/mdg_handler.js"></script>
@@ -62,6 +63,7 @@ html,body{
     border-radius: 0.2;
 }
 #sbase {
+	max-height: calc(100% - 130px);
 	 flex-grow:1;
 	 position:relative ;
 }
@@ -171,7 +173,7 @@ div.arrow:hover{
 </head>
 <body>
 <section>
-<a href="/"> <-home</a>
+{% include mdgsRadioButtonWithHome.html %}
 <hr>
 </section>
 <div id=main>

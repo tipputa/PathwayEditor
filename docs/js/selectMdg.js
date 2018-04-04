@@ -14,23 +14,20 @@ $(function() {
         $('#base').css(($(this).attr('id')=="size_x")?'width':'height',parseInt($(this).val())+"px") ;
 	})
 
-
-        $( 'input[name="radio-1"]:radio' ).change( function() { 
-           $('#source').load($(this).val(), function() {
-                var b = new mdg_draw($('#base')) ;
-        	    console.info($('#source').val());
-        	    var data = b.parse($('#source').val());
-	            b.setobj(data, true) ;
-         });
-        });  
+    $( 'input[name="radio-1"]:radio' ).change( function() { 
+       $('#source').load($(this).val(), function() {
+       	    data = b.parse($('#source').val());
+            b.setobj(data, true) ;
+        });
+    });  
     
-    $('#source').load("mdg/GL_List.txt", function() {
-        	console.info($('#source').val());
-        	var data = b.parse($('#source').val());
+    $('#source').load($('input[name="radio-1"]:checked').val(), function() {
+        	data = b.parse($('#source').val());
 	        b.setobj(data, true) ;
     });
     
     var b = new mdg_draw($('#base')) ;
+    var data = "";
 
     // transLocate by arrow
     var type = "<div>";
