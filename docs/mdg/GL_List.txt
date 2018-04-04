@@ -1,0 +1,36 @@
+// 最下部に簡単な説明あり
+//
+// additional part
+// 丸でmark
+[test] <3,6.5>
+!GL{OH |OH|OH}
+glycerol
+
+[test2] <12.5,6.5>
+!GL{OH |OH|PO_s3s_}
+G3P
+ 
+[test3] <21.5,6.5>
+!GL{O-CO-_*R1*_ |OH|PO_s3s_}
+ 
+[tes4] <32,7>
+!GL{O-CO-_*R1*_ |O-CO-_*R2*_|PO_s3s_}
+ 
+
+[test5] <41.5,7>
+!GL{O-CO-R1 | O-CO-R2 | PO_s2s_-O-<t style="color:red">CMP</t>}
+ 
+[test6] <3,14.5>
+!PG{O-CO-R1 | O-CO-R2 | <t style="color:red">PO2-O</t>| HO|<t style="color:red">O3P</t> }
+ 
+[test7] <14.5,14.5>
+!PG{O-CO-R1 | O-CO-R2 | PO2-O| HO|<t style="color:red">HO</t> }
+ 
+[test8] <25.5,14.5>
+!CL{O-CO-R1|O-CO-R2|O-PO-O|HO|O-PO-O|O-CO-R1|O-CO-R1}
+CL
+<pop>
+!CL{O-CO-R1|O-CO-R2|O-PO-O|HO|O-PO-O|O-CO-R1|O-CO-R1}
+CL
+</pop>
+ 

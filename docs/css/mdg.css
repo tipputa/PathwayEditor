@@ -1,3 +1,5 @@
+section.inner, header.inner { position: relative; max-width: 840px; padding: 20px 10px; margin: 0 auto; }
+
 /* mdg basic css*/
 div.mdg {
 user-select:none;
@@ -23,6 +25,7 @@ div.mdg .box {
 	box-sizing:border-box;
 	cursor:move;
     font-family: 'Helvetica';
+    vertical-align: middle;
     border-radius:0.2em;
     padding-top:0.25em;
     padding-bottom:0.25em;
@@ -109,12 +112,21 @@ div.mdg a, div.mdg a:before {
 div.mdg div.box {
 	text-align:center ;
 }
+div.box table {
+    border:none;
+    margin-bottom: 0;
+    vertical-align:middle;
+    text-align:left;
+}
 div.mdg table.box {
 	border-collapse: collapse ;
 	margin:0 ;
     border-radius:0.5em;
 }
 div.mdg table td {
+    border:none;
+    line-height:0;
+    vertical-align: middle;
     border-radius:0.5em;
     padding-top:0.2em;
     padding-bottom:0.2em;
@@ -179,6 +191,7 @@ div.mdg .mark{
 }
 
 div.mdg div.image, div.mdg div.image2, div.mdg div.image50, div.mdg div.image100 div.mdg div.image200{
+    box-shadow: none;
 	background-color:white;
 	padding-left:1em ;
 	padding-right:1em ;
@@ -187,11 +200,17 @@ div.mdg div.image, div.mdg div.image2, div.mdg div.image50, div.mdg div.image100
 }
 
 div.mdg div.image2 {
+    box-shadow: none;
 	background-color:white;
 	padding-left:3em ;
 	padding-right:3em ;
     padding-top:0.5em ;
 	padding-bottom:0.5em ;
+}
+
+div.mdg img {
+    border: none;
+    box-shadow: none;
 }
 
 div.mdg div.image img {
@@ -458,4 +477,64 @@ div.mdg .box:hover span, div.mdg .label:hover span{
     border: 1px solid #0D47A1;
     border-radius:3px;
     z-index: 20;
+}
+#view {
+	height:100% ;
+	flex-grow:1;
+	display:flex ;
+	flex-direction: column ;
+}
+#control {
+	margin-left:1rem ;
+}
+#vbase {
+	height:100% ;
+	position:relative ;
+}
+#rollbase {
+	position:absolute ;
+	top:5px ;
+	right:5px;
+	bottom:5px;
+	left:5px; 
+	overflow:scroll ;	
+}
+#zoom{
+	background-color:inherit;
+}
+input[type=range] {
+	width:150px ;
+	background-color:#ccc;
+}
+div.resbar_h {
+	width:4px ;
+	background-color:#ccc ;
+	cursor:col-resize ;
+	user-select: none;
+}
+
+div.arrow{
+    width: 0px;
+    height: 0px;
+    display:inline-block;
+    vertical-align:middle;
+	/* borderをうまく使って三角形を描く (高さ: 45px, 横幅: 28×2=56px) */
+    border-bottom: solid 15px white;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+    transform: scaleX(0.9);
+    padding:0;
+    background-color:inherit;
+    }
+div.transL{
+    transform: rotate(-90deg) scaleX(0.9);
+}
+div.transR{
+    transform: rotate(90deg) scaleX(0.9);
+}
+div.transD{
+    transform: rotate(180deg) scaleX(0.9);
+}
+div.arrow:hover{
+    border-bottom: solid 15px #ECEFF1;
 }

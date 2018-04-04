@@ -1,0 +1,41 @@
+<style type="text/css">
+#source {
+    display: none;
+}
+
+#base {
+	display:block ;
+	font-family:sans-serif;
+	background-color:rgb(250, 250, 250) ; /*white-smoke*/
+	transform-origin:0 0 ;
+    border-radius: 0.2;
+}
+#main {
+	display:flex ;
+	position: relative;
+	max-width: 840px;
+    height: 540px;
+	flex-direction: row ;
+	background-color:#333333 ; /*Night Rider*/
+	color:white;
+}
+
+</style>
+<style type="text/css" id=szoom>
+#base {
+	transform: scale(0.8);
+}
+</style>
+<div id=main>
+<div class=resbar_h id="rb"></div>
+<section id=view>
+<section id=control>
+zoom:<input type=range id=zoom min=25 max=200 value=50 />
+</section>
+<div id=vbase>
+<div id=rollbase>
+<div id=base class=mdg><svg id=mdg_svg></svg></div>
+</div>
+</div>
+</section>
+</div>

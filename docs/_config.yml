@@ -1,1 +1,7 @@
-theme: jekyll-theme-minimal
+title: Pathway Editor 
+github_username:  tipputa
+
+# Build settings
+theme: jekyll-theme-slate
+encding: utf-8
+repository: tipputa/PathwayEditor # 自分のアカウントとリポジトリを書きましょう
