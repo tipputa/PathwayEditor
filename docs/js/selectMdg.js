@@ -23,6 +23,4 @@ $(function() {
         	data = b.parse($('#source').val());
 	        b.setobj(data, true) ;
     });
-
-    });
 })
