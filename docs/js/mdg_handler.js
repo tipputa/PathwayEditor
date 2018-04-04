@@ -40,11 +40,12 @@ $(function() {
 	        b.setobj(data, true) ;
     });
 
-    $( 'input[name="radio-1"]:radio' ).change( function() { 
-       $('#source').load("../" + $(this).val(), function() {
-            b = new mdg_draw($('#base')) ;
-       	    data = b.parse($('#source').val());
-            b.setobj(data, true) ;
+    $( 'input[name="radio-1"]:radio' ).change( function() {
+       $('#inputName').load("../" + $(this).val(), function() {
+            console.info($('#inputName').val());
+       	    data = b.parse($('#inputName').val());
+       	    $('#source').val($('#inputName').val());
+            b.setobj(data, true);
         });
     });  
 	    
