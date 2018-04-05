@@ -1,180 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width">
-<title>MarkDownPathwayEditor</title>
-<link rel="stylesheet" type="text/css" href="css/mdg.css">
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/mdg.js"></script>
-<style type="text/css">
-html,body{
-width:100%;
-	height:100%;
-	margin:0 ;
-	padding:0 ;
-	box-sizing:border-box;
-	overflow:hidden ;
-	font-family:"Helvetica" ;
-    color:#F4F4F2;
-}
-#main {
-	display:flex ;
-	flex-direction: row ;
-	width:100% ;
-	height:100% ;
-	background-color:#333333 ; /*Night Rider*/
-	color:white;
-}
-#edit {
-	width:30% ;
-	height:100% ;
-	display:flex ;
-	flex-direction:column ;
-}
-#view {
-	height:100% ;
-	flex-grow:1;
-	display:flex ;
-	flex-direction: column ;
-}
-#control {
-	margin-left:1rem ;
-}
-#vbase {
-	height:100% ;
-	position:relative ;
-}
-#rollbase {
-	position:absolute ;
-	top:5px ;
-	right:5px;
-	bottom:5px;
-	left:5px;
-	overflow:scroll ;
-}
-#base {
-	display:block ;
-	font-family:sans-serif;
-	background-color:rgb(250, 250, 250) ; /*white-smoke*/
-	transform-origin:0 0 ;
-    border-radius: 0.2;
-}
-#sbase {
-	 flex-grow:1;
-	 position:relative ;
-}
-#source {
-	position:absolute;
-	width:calc(100% - 15px) ;
-	height:calc(100% - 15px) ;
-    line-height: 1.2;
-	left:5px ;
-	top:5px ;
-	bottom:5px ;
-	font-size:1rem ;
-	font-family:"Helvetica",sans-serif ;
-    border-radius: 0.2em;
-}
-#exp_src {
-	display:none ;
-}
-#i_fname {
-	width:10rem ;
-}
-#zoom{
-	background-color:inherit;
-}
-input,button {
-	font-size:1rem ;
-}
-input[type=range] {
-	width:300px ;
-	background-color:#ccc;
-}
-div.resbar_h {
-	width:4px ;
-	background-color:#ccc ;
-	cursor:col-resize ;
-	user-select: none;
-}
-div.mdiv {
-	margin:5px ;
-}
-div.arrow{
-    width: 0px;
-    height: 0px;
-    display:inline-block;
-    vertical-align:middle;
-	/* borderをうまく使って三角形を描く (高さ: 45px, 横幅: 28×2=56px) */
-    border-bottom: solid 15px white;
-    border-left: solid 10px transparent;
-    border-right: solid 10px transparent;
-    transform: scaleX(0.9);
-    padding:0;
-    background-color:inherit;
-    }
-div.transL{
-    transform: rotate(-90deg) scaleX(0.9);
-}
-div.transR{
-    transform: rotate(90deg) scaleX(0.9);
-}
-div.transD{
-    transform: rotate(180deg) scaleX(0.9);
-}
-div.arrow:hover{
-    border-bottom: solid 15px #ECEFF1;
-}
-
-</style>
-<style id=szoom>
-#base {
-	transform: scale(1.0);
-}
-</style>
-<style>
-@page {
-	size: A4 landscape ;
-	margin: 0;
-}
-
-@media print {
-	body {
-		width:297mm ;
-	}
-	#main {
-		background-color:white ;
-	}
-	#edit {
-		display:none ;
-	}
-	#view {
-		width:100% ;
-	}
-	#control {
-		display:none ;
-	}
-	#rb {
-		display:none ;
-	}
-	#base {
-		width:calc(100% - 10mm) ;
-		margin:5mm ;
-		padding:0 ;
-		background-color:white ;
-		transform: scale(0.37) ;
-	}
-}
-</style>
-</head>
-<body>
-<div id=main>
-<section id=edit>
-<div> MarkDownPathwayEditor v0.8</div>
-
-<div id=sbase>
-<textarea id=source>
 // 最下部に簡単な説明あり
 //
 // additional part
@@ -286,10 +109,10 @@ u=[PTDSS]l(l_w3)=>d[PS]
 
 d=[PISD]r(l_w3)=>u[PE]
 
+ 
 
 
-
-//1-acylglycerol-3-phosphate O-acyltransferase
+//1-acylglycerol-3-phosphate O-acyltransferase 
 g[AGPAT]
 AGPAT
 
@@ -319,7 +142,7 @@ g[LPIN]
 LPIN
 ?[link](http://www.genome.jp/dbget-bin/www_bget?ec:3.1.3.4"KEGG")
 <pop>
-Phosphatidate phosphatase
+Phosphatidate phosphatase 
 </pop>
 
 //Cholinephosphotransferase
@@ -431,29 +254,3 @@ r==>r[CMP5]
 //CMP5
 [CMP5] <27.5,22>
 CMP
-</textarea>
-</div>
-<div class="mdiv">
-<div>filename:<input type=text id=i_fname value="sample.mdg" /></div>
-<button id=b_load>LOAD</button>
-<input type=file id=f_load style="display:none" />
-<a href="" id=l_save target="_blank"><button id=b_save>SAVE</button></a>
-</div>
-</section>
-<span id="ruler" style="line-height: 1.2; visibility:hidden;position:absolute;"></span>
-<div class=resbar_h id="rb"></div>
-<section id=view>
-<section id=control>
-zoom:<input type=range id=zoom min=25 max=200 value=100>
-width:<input type=text id=size_x size=6 value=2900 > height:
-<input type=text id=size_y size=6 value=2000>
-</section>
-<div id=vbase>
-<div id=rollbase>
-<div id=base class=mdg><svg id=mdg_svg></svg></div>
-</div>
-</div>
-</section>
-</div>
-</body>
-</html>
