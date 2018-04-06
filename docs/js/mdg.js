@@ -271,19 +271,10 @@ function setConnectPos(o,f) {
                     px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
                 case 'r':
                     px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
-                case 'U':
-                    px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
-                case 'D':
-                    px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
-                case 'L':
-                    px = sx ;py = sy + h/1.5 ; vx=-1;vy=0; break ;
-                case 'R':
-                    px = sx+w+5 ;py = sy + h/1.5 ; vx=1;vy=0; break ;
                 default:
             }
         }
-    } else {
-        switch(f.substr(0,1)) {
+    } else {switch(f.substr(0,1)) {
             case 'u':
                 px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
             case 'd':
@@ -291,10 +282,17 @@ function setConnectPos(o,f) {
             case 'l':
                 px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
             case 'r':
-                px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
+                px = sx+w+5 ;py = sy + h/2 ; vx=1;vy=0; break ;
+            case 'U':
+                px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
+            case 'D':
+                px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
+            case 'L':
+                px = sx ;py = sy + h/1.5 ; vx=-1;vy=0; break ;
+            case 'R':
+                px = sx+w+5 ;py = sy + h/1.5 ; vx=1;vy=0; break ;
             default:
-        }
-    }
+            }
     return {x:px,y:py,vx:vx,vy:vy} ;
 }
 
