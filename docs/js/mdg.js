@@ -274,7 +274,8 @@ function setConnectPos(o,f) {
                 default:
             }
         }
-    } else {switch(f.substr(0,1)) {
+    } else {
+        switch(f.substr(0,1)) {
             case 'u':
                 px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
             case 'd':
@@ -293,6 +294,7 @@ function setConnectPos(o,f) {
                 px = sx+w+5 ;py = sy + h/1.5 ; vx=1;vy=0; break ;
             default:
             }
+    }
     return {x:px,y:py,vx:vx,vy:vy} ;
 }
 
