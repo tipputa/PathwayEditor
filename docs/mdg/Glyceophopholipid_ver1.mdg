@@ -1,0 +1,288 @@
+// 最下部に簡単な説明あり
+//
+// additional part
+// 丸でmark
+[title] <2.5,2.5>
+#Glycerolipid Metabolome
+de novo pathway of glycerophospholipid
+//Glycerol-3-phosphate acyltransferase
+g[GPAM]
+GPAT
+<span>
+Protein
+Glycerol-3-phosphate acyltransferase
+<br/>
+Subcellular location
+GPAT1,2:Mitochondrion
+GPAT3,4:ER
+</span>
+
+
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.3.1.15"KEGG")
+
+UniPlot <a href=http://www.uniprot.org/uniprot/Q9SHJ5>1</a>, <a href=http://www.uniprot.org/uniprot/Q9SHJ5>2</a>, <a href=http://www.uniprot.org/uniprot/Q9SHJ5>3</a>, <a href=http://www.uniprot.org/uniprot/Q9SHJ5>4</a>
+
+[ERtext] (trans) <45.5,86.5>css(font-size:50px)
+Endoplasmic Reticulum 
+
+[MTtext] (trans) <54,29.5>css(font-size:50px)
+Mitochondrion
+
+
+[ER] <2,3,350,1500>css(background:rgb(0,200,50 ; color:black; border-:100px;  box-shadow:none;z-index:1;)
+ER
+
+[ER2] <22,37.5,1000,948>css(background:rgb(0,200,50 ; color:black; border-:100px;  box-shadow:none;z-index:1;)
+
+
+[MT] <25,3,950,540>css(background:rgb(255,200,50 ; border-:100px;  box-shadow:none;z-index:1;)
+
+
+
+
+
+//glycerol-3-phosphate
+[G3P] <9,8>
+!GL{OH |OH|O-PO_s3s_}
+?[link](http://lipidbank.jp/cgi-bin/main.cgi?id=PGP "G3P")
+<pop>
+![image](img/G3P.png)
+glycerol-3-phosphate
+</pop>
+d=[GPAM](l_w3)=>u[LPA]
+
+//lysophosphatidic acid
+[LPA] <8,21.5>
+!GL{O-CO-R1|OH|O-PO_s3s_}
+LPA
+<pop>
+![image](img/LPA.png)
+lysophosphatidic acid
+
+</pop>
+d=[AGPAT](l_w3)=>u[PA]
+
+
+//phosphatidic acid
+[PA] <8,32>
+!GL{O-CO-R1|O-CO-R1|O-PO_s3s_}
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPA"PA")
+d=[LPIN](l_w3)=>u[DAG]
+r=[CDS2](l_w3)=>l[CDP-DAG]
+r=[CDS1](l_w3)=>[CDP-DAGer]
+
+
+//diacylglycerol
+[DAG] <8.5,65.5>
+!GL{O-CO-R1|O-CO-R1| OH}
+DAG
+=[CHPT1](l_w3)=>[PC]
+=[CEPT1SELENOI](l_w3)=>[PE]
+
+//cytidine diphosphate-diacylglycerol
+[CDP-DAG] <28.5,27>
+!GL{O-CO-R1 | O-CO-R2 | O-PO2-CMP</t>}
+CDP-DAG
+u=[PGS1](l_w3)=>d[PGP]
+
+
+//cytidine diphosphate-diacylglycerol
+[CDP-DAGer] <28.5,39>
+!GL{O-CO-R1 | O-CO-R2 | O-PO2-CMP</t>}
+CDP-DAG
+r=[CDIPT](l_w3)=>[PI]
+
+
+//phosphatidylglycerol-phosphate
+[PGP] <27.5,9.5>
+!PG{O-CO-R1 | O-CO-R2 | O-PO2-O| HO|O3P-O}
+PGP
+=[PTPMT1] (l_w3)=>[PG]
+
+//phosphatidylglycerol
+[PG] <49,9.5>
+!PG{O-CO-R1 | O-CO-R2 | PO2-O| HO|HO }
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPG"PG")
+=[CRLS1](l_w3)=>[CL]
+
+//phosphatidylinositol
+[PI] <48,38.5>
+!GL{O-CO-R1 | O-CO-R2 | O-PO2-Inositol}
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPI"PI")
+
+//cardiolipin
+[CL] <70.5,8>
+!CL{O-CO-R1|O-CO-R2|O-PO-O|HO|O-PO-O|O-CO-R3| O-CO-R4}
+CL
+
+//phosphatidylcholine
+[PC] <27.5,58>
+!GL{O-CO-R1|O-CO-R1|O-PO2-Choline}
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPC"PC")
+
+d=[PTDSS](l_w3)=>u[PS]
+
+
+//phosphatidylethanolamine
+[PE] <26,82>
+!GL{O-CO-R1|O-CO-R1| O-PO2-Ethanolamine}
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPE "PE")
+u=[PTDSS]l(l_w3)=>d[PS]
+
+//phosphatidylserine
+[PS] <27.5,69.5>
+!GL{O-CO-R1|O-CO-R1| O-PO2-Serine}
+?[link](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPS "PS")
+
+d=[PISD]r(l_w3)=>u[PE]
+
+ 
+
+
+//1-acylglycerol-3-phosphate O-acyltransferase 
+g[AGPAT]
+AGPAT
+
+//Phosphatidate cytidylyltransferase
+g[CDS2]
+CDS2
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.7.41"KEGG")
+
+//Phosphatidate cytidylyltransferase
+g[CDS1]
+CDS1
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.7.41"KEGG")
+
+
+//CDP-diacylglycerol--glycerol-3-phosphate 3-phosphatidyltransferase
+g[PGS1]
+PGS
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.8.5 "KEGG")
+
+//Phosphatidylglycerophosphatase
+g[PTPMT1]
+PTPMT
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:3.1.3.27"KEGG")
+
+//cardiolipin synthase
+g[CRLS1]
+CRLS
+?[link](http://www.uniprot.org/uniprot/Q9UJA2"UniProt")
+
+//Phosphatidate phosphatase
+g[LPIN]
+LPIN
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:3.1.3.4"KEGG")
+<pop>
+Phosphatidate phosphatase 
+</pop>
+
+//Cholinephosphotransferase
+g[CHPT1]
+CHPT
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.8.2"KEGG")
+?[link](http://www.uniprot.org/uniprot/Q8WUD6"UniProt")
+
+//Ethanolaminephosphotransferase 1
+g[CEPT1SELENOI]
+CEPT1/SELENOI
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.8.1"KEGG")
+
+
+//Phosphatidylserine synthase
+g[PTDSS]
+PTDSS
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.8.8"KEGG")
+
+//Phosphatidylserine decarboxylase
+g[PISD]
+PISD
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:4.1.1.65"KEGG")
+
+//CDP-diacylglycerol--inositol 3-phosphatidyltransferase
+g[CDIPT]
+CDIPT
+?[link](http://www.genome.jp/dbget-bin/www_bget?ec:2.7.8.11"KEGG")
+
+//Inositol
+[Inositol] <38,44.5>
+Inositol
+u==>u[CMP]
+
+//Inositol
+[CMP] <45,44.5>
+CMP
+
+//CTP
+[CTP] <17,31>
+CTP
+d==>d[PPi]
+
+//PPi
+[PPi] <23.5,27.5>
+PPi
+
+//H2O
+[H2O] <7.5,57.5>
+H2O
+r==>r[Pi]
+
+//Pi
+[Pi] <8,62.5>
+Pi
+
+//CDP-Ethanolamine
+[CDPethanolamine] <10,74.5>
+CDP-Ethanolamine
+r==>r[CMP2]
+
+//CMP
+[CMP2] <15.5,79>
+CMP
+
+//CDP-Choline
+[CDPcholine] <13.5,62>
+CDP-Choline
+r==>l[CMP3]
+
+//CMP
+[CMP3] <25.5,66.5>
+CMP
+
+//Serine
+[Serine] <35.5,64.5>
+Ser
+l==>l[Choline]
+
+//Choline
+[Choline] <35.5,67.5>
+Choline
+
+//CMP4
+[CMP4] <66,16.5>
+CMP
+
+//CDP-DAG---CL
+[conect1] <59,16.5>
+CDP-DAG
+d=(l_w3)=r[CDP-DAG]
+u=(l_w3)=>u[CMP4]
+
+//H2O2
+[H2O2] <40,10.5>
+H2O
+d==>d[Pi2]
+
+//Pi2
+[Pi2] <44.5,10.5>
+Pi
+
+//glycerophosphate
+[glycerophosphate] <22,25.5>
+glycerophosphate
+
+r==>r[CMP5]
+
+//CMP5
+[CMP5] <27.5,22>
+CMP
