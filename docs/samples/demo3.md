@@ -2,4 +2,4 @@
 layout: pathwayEditor
 title:  "demo"
 ---
-../mdg/Glyceophopholipid_ver1.mdg
+../mdg/demo3_Glycerophospholipids_ver2.mdg

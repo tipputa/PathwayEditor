@@ -2,4 +2,4 @@
 layout: pathwayEditor
 title:  "demo"
 ---
-../mdg/Glyceophopholipid_20180126.mdg
+../mdg/demo2_Glyceophopholipid_20180126.mdg

@@ -2,4 +2,4 @@
 layout: pathwayEditor
 title:  "demo"
 ---
-../mdg/sample.mdg
+../mdg/demo1_sample.mdg

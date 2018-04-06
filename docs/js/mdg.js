@@ -271,6 +271,14 @@ function setConnectPos(o,f) {
                     px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
                 case 'r':
                     px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
+                case 'U':
+                    px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
+                case 'D':
+                    px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
+                case 'L':
+                    px = sx ;py = sy + h/1.5 ; vx=-1;vy=0; break ;
+                case 'R':
+                    px = sx+w+5 ;py = sy + h/1.5 ; vx=1;vy=0; break ;
                 default:
             }
         }
