@@ -173,7 +173,14 @@ div.arrow:hover{
 </head>
 <body>
 <section>
-{% include mdgsRadioButtonWithHome.html %}
+<form>
+<div class="toggle-buttons">
+<label>
+<span class="button" style="background:#212121"><a href="../" style="color:white"> Home </a></span>
+</label>
+{% include mdgsRadioButton.html %}
+</div>
+</form>
 <hr>
 </section>
 <div id=main>

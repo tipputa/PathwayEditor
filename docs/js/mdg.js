@@ -489,9 +489,9 @@ function setConnectPos(o,f) {
                 var txt = '\
                 <table align=center style="transform:translate(-6px, 10px)"> \
                 <tr><td rowspan=3><img src=img/GL2.png style=" height:40px;transform:translateX(16px);"/ ></td> \
-                <td nowrap align=left style="line-height:0%;">'+fontChange(R1)+'</td></tr> \
-                <tr><td nowrap align=left style="line-height:0%;">'+fontChange(R2)+'</td></tr> \
-                <tr><td nowrap align=left  style="line-height:0%;">' + fontChange(R3)+ '</td></tr></table>';
+                <td nowrap align=left style="line-height:50%;">'+fontChange(R1)+'</td></tr> \
+                <tr><td nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr> \
+                <tr><td nowrap align=left  style="line-height:50%;">' + fontChange(R3)+ '</td></tr></table>';
                 ll.push(txt);
                 
             }else if (a = m_PG.exec(cl)){
