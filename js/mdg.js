@@ -229,7 +229,7 @@ var mdg_draw = function(_base) {
     }
 
 // connectionの位置を計算
-function setConnectPos(o,f) {
+    function setConnectPos(o,f) {
     var sx = parseInt(o.css('left')) ;
     var sy = parseInt(o.css('top')) ;
     var w = parseInt(o.css('width')) ;
@@ -335,6 +335,38 @@ function setConnectPos(o,f) {
             }
         }
     }
+    
+    this.removeActiveNode = function(text){
+        var l = text.split("\n") ;
+        var l2 = [];
+        var activeCheck = false;
+        for(var i in l) {
+            var cl = l[i] ;
+            var a
+            if(a = this.m_h.exec(cl)) {
+                if($('#'+a[1]).hasClass("active")){
+                    console.info(a[1]);
+                    activeCheck = true;
+                }
+                else{
+                    activeCheck = false;
+                    l2.push(cl)
+                }
+            }else if(a = m_g.exec(cl)){
+                activeCheck = false;
+                l2.push(cl);
+            }else if(a = m_conn.exec(cl)){
+                if($('#'+a[8]).hasClass("active")){
+                    console.info(a[8] + ", edge");
+                }else if(!activeCheck){
+                    l2.push(cl);
+                }
+            }else if(!activeCheck){
+                l2.push(cl);
+            }
+        }
+        return l2.join("\n");
+    }
 
     this.deact = function(){
         for(var id in this.bpos){
@@ -370,6 +402,9 @@ function setConnectPos(o,f) {
     // text 関連
     // md parser
     this.m_h = /^\[([A-z0-9-_]*)\]\s*(?:\(([^)]*)\))?\s*(?:<\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*,*\s*([0-9\.]+)?\s*,*\s*([0-9\.]+)?\s*>)?\s*(?:css\(([^)]*)\))?\s*$/ ;
+    var m_g = /^g\[([A-z0-9-_]+)\]\s*(?:\((.*)\))?\s*?$/;
+    var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[([A-z0-9-_]+)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\(([^"=>]*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([A-z0-9-_]+)\]\s*$/i ;
+
     this.parse = function(text) {
         // return するbox, conn, genesの初期化
         var box = [] ;
@@ -377,11 +412,9 @@ function setConnectPos(o,f) {
         var genes = [];
 
         // pattern
-        var m_g = /^g\[([A-z0-9-_]+)\]\s*(?:\((.*)\))?\s*?$/;
         var m_comm = /^\/\// ;
         var m_wiki = /^<?nowiki>/;
         var m_sep = /^---*$/ ;
-        var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[([A-z0-9-_]+)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\(([^"=>]*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([A-z0-9-_]+)\]\s*$/i ;
         var m_ulink= /\?\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
         var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"([^")]*)")?\))?\s*(?:css\(([^)]*)\))?/i;
         var m_popStart = /^<pop>$/;
@@ -566,7 +599,7 @@ function setConnectPos(o,f) {
                     ll = [] ;
                 } else if(a = m_title.exec(cl)) {
                     b.title = a[1] ;
-                } else if( a=m_conn.exec(cl)) { // コネクションの読み込み。fpがはじめ、tpが終わり、矢印の向きも判定
+                } else if( a = m_conn.exec(cl)) { // コネクションの読み込み。fpがはじめ、tpが終わり、矢印の向きも判定
                     if(ll.length>0) l.push( ll.join("<br/>")) ;
                     ll = [] ;
                     var fp = "r" ;
@@ -641,7 +674,11 @@ function setConnectPos(o,f) {
 }
 
 
-
+var strUndo = [];
+var strRedo = [];
+var firstUndo = true;
+var finalStrUndo = true;
+var checkRedo = false;
 // handler part
 $(function() {
 
@@ -675,7 +712,9 @@ $(function() {
 	} else if(userAgent.indexOf('opera') != -1) {
 	} else {
     checker=false;
-}
+    }
+    // for debug
+    //  checker = false;
 
 
     // transLocate by arrow
@@ -700,7 +739,8 @@ $(function() {
 			$('#i_fname').val(p.fname ) ;
 		}
 	}
-	var data = b.parse($('#source').val())  ;
+    undoSet($('#source').val());
+	var data = b.parse($('#source').val());
 	b.setobj(data,true) ;
 
     // load localStorage
@@ -720,11 +760,26 @@ $(function() {
 
     // souceの値が変更された場合それを反映させる
 	$('#source').on('input',function() {
-		var s = $(this).val() ;
-		data = b.parse(s) ;
-		b.setobj(data) ;
+		var s = $(this).val();
+        undoSet($(this).val());
+        strRedo = [];
+		data = b.parse(s);
+		b.setobj(data);
         if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 	})
+
+    $(document).on('dblclick', '#base .label, #base .box', function(){
+        var str = $(this)[0].title;
+        var s = new RegExp("^g?\\[" + str+"\\]");
+        console.info(s);
+        var p = b.searchPosition($('#source').val(), $('#source').css("width"),s);
+        //var p = $("移動させたいIDまたはCLASS").offset().top;
+        $('#source').animate({ scrollTop: p }, 'slow');
+        var e = $("<div>").addClass("highlight").attr("id","highlight").html("["+str+"]");
+        $('#sbase').append(e);
+        setTimeout(function(){$('#highlight').remove()},2000)
+    });
+
 
     var rectangle;
 	$(document).on("mousedown",'#base',function(ev){
@@ -746,18 +801,6 @@ $(function() {
         rectangle=undefined;
     });
 
-    $(document).on('dblclick', '#base .label, #base .box', function(){
-        var str = $(this)[0].title;
-        var s = new RegExp("^g?\\[" + str+"\\]");
-        console.info(s);
-        var p = b.searchPosition($('#source').val(), $('#source').css("width"),s);
-        //var p = $("移動させたいIDまたはCLASS").offset().top;
-        $('#source').animate({ scrollTop: p }, 'slow');
-        var e = $("<div>").addClass("highlight").attr("id","highlight").html("["+str+"]");
-        $('#sbase').append(e);
-        setTimeout(function(){$('#highlight').remove()},2000)
-    });
-
     // box drag時の処理
 	$(document).on("dragstart",'#base .box',function(ev){
         $("#rect").remove();
@@ -774,12 +817,13 @@ $(function() {
         b.drop(mag);
         b.redraw(data);
 		var s = b.upd_text($('#source').val()) ;
+        undoSet(s);
+        strRedo = [];
 		$('#source').val(s) ;
         if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-
 		return false ;
-	})
-
+	});
+    
     $('.arrow').on("click", function(){
         var tmpId = $(this).attr('id');
         var a;
@@ -792,7 +836,9 @@ $(function() {
         b.changeAllPos(a);
         b.redraw(data);
 		var s = b.upd_text($('#source').val()) ;
-		$('#source').val(s) ;
+		$('#source').val(s);
+        undoSet(s);
+        strRedo = [];
     });
 
     // load
@@ -817,8 +863,99 @@ $(function() {
 		$(this).attr("href","data:application/octet-stream;charset=UTF-8,"+encodeURIComponent($('#source').val())) ;
 		return true ;
 	})
+    
+    // remove active box
+    $(document).keydown(function(e){
+        if(e.keyCode == 8 && e.ctrlKey){
+            var s = b.removeActiveNode($("#source").val());
+            $("#source").val(s);
+            b.setobj(b.parse(s));
+            undoSet(s);
+    }});
 
-})
+
+    /* keydownでredo or undo
+    $(document).keydown(function(e){
+        // keycode = 90がz
+        if(e.keyCode == 90 && (e.ctrlKey || e.metaKey)){
+           console.info("control + z");
+            if(strUndo.length > 0){
+                if(firstUndo && !checkRedo && strUndo.length > 1){
+                    strUndo.pop(); firstUndo=false;
+                }
+                if(!finalStrUndo){
+                    runUndo();
+                }
+            }      
+        }
+        // keycode = 89 がy
+        else if(e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
+           console.info("control + y");
+            if(strRedo.length != 0){
+                var temp = strRedo.pop();
+                undoSet($('#source').val());
+                checkRedo = true;
+                $('#source').val(temp);
+                data = b.parse(temp);
+                b.setobj(data);
+                if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+            }      
+        }
+    });
+    */
+    
+    // redo
+    $('#redo').on('click', function(){
+        if(strRedo.length != 0){
+            var temp = strRedo.pop();
+            undoSet($('#source').val());
+            checkRedo = true;
+            $('#source').val(temp);
+            data = b.parse(temp);
+            b.setobj(data);
+            if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+        }      
+    });
+        // undo
+    $('#undo').on('click', function(){
+        if(strUndo.length > 0){
+            if(firstUndo && !checkRedo && strUndo.length > 1){
+                strUndo.pop(); firstUndo=false;
+            }
+            if(!finalStrUndo){
+                runUndo();
+            }
+        }
+    });
+    // 実際にundoを実行
+    function runUndo(){
+        var temp = strUndo.pop();
+        if (strUndo.length === 0){
+            strUndo.push(temp);
+            finalStrUndo = true;
+        }else if(strUndo.length === 1 && checkRedo){
+            finalStrUndo = true; 
+        }else{
+            finalStrUndo = false;
+        }
+        strRedo.push($('#source').val());
+        $('#source').val(temp);
+        data = b.parse(temp);
+        b.setobj(data);
+        if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
+    }
+    // undo用の配列にセット、履歴は100まで
+    function undoSet(str){
+        firstUndo = true;
+        checkRedo = false;
+        finalStrUndo = false;
+        if(strUndo.length > 100){
+            strUndo.shift();
+        }
+        strUndo.push(str);
+    }
+});
+
 
 
 function resizebar(bar,target,hv,dir) {
