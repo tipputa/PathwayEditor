@@ -335,7 +335,7 @@ var mdg_draw = function(_base) {
             }
         }
     }
-    
+
     this.removeActiveNode = function(text){
         var l = text.split("\n") ;
         var l2 = [];
@@ -415,7 +415,7 @@ var mdg_draw = function(_base) {
         var m_comm = /^\/\// ;
         var m_wiki = /^<?nowiki>/;
         var m_sep = /^---*$/ ;
-        var m_ulink= /\?\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
+        var m_ulink= /\?\[(.+)\]\s*(?:\(([^ "]+)\s*(?:"(.+)")?\))?/i;
         var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"([^")]*)")?\))?\s*(?:css\(([^)]*)\))?/i;
         var m_popStart = /^<pop>$/;
         var m_popEnd = /^<\/pop>$/;
@@ -823,7 +823,7 @@ $(function() {
         if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 		return false ;
 	});
-    
+
     $('.arrow').on("click", function(){
         var tmpId = $(this).attr('id');
         var a;
@@ -863,7 +863,7 @@ $(function() {
 		$(this).attr("href","data:application/octet-stream;charset=UTF-8,"+encodeURIComponent($('#source').val())) ;
 		return true ;
 	})
-    
+
     // remove active box
     $(document).keydown(function(e){
         if(e.keyCode == 8 && e.ctrlKey){
@@ -886,7 +886,7 @@ $(function() {
                 if(!finalStrUndo){
                     runUndo();
                 }
-            }      
+            }
         }
         // keycode = 89 がy
         else if(e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
@@ -899,11 +899,11 @@ $(function() {
                 data = b.parse(temp);
                 b.setobj(data);
                 if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-            }      
+            }
         }
     });
     */
-    
+
     // redo
     $('#redo').on('click', function(){
         if(strRedo.length != 0){
@@ -914,7 +914,7 @@ $(function() {
             data = b.parse(temp);
             b.setobj(data);
             if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-        }      
+        }
     });
         // undo
     $('#undo').on('click', function(){
@@ -934,7 +934,7 @@ $(function() {
             strUndo.push(temp);
             finalStrUndo = true;
         }else if(strUndo.length === 1 && checkRedo){
-            finalStrUndo = true; 
+            finalStrUndo = true;
         }else{
             finalStrUndo = false;
         }
