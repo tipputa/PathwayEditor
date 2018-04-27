@@ -3,6 +3,7 @@ var mdg_draw = function(_base) {
     this.base = $(_base) ;
     this.svg = $("svg",base) ;
     this.bpos = {} ; // boxのinfo保存用
+    this.size = {} ;
     this.em = parseInt($('html').css('font-size')) ; // 基準とするフォントサイズ
     this.genebase = []; // gene infoの保存用
     this.dragDrop = {};
@@ -14,8 +15,12 @@ var mdg_draw = function(_base) {
         $('div,table',this.base).remove() ;
         lp = {x:1,y:1} ;
         for(var i in data.box) {
-            var pos = this.create(true,data.box[i]) ; // boxの基本情報作成
+            var art = this.create(true,data.box[i]) ; // boxの基本情報作成
+            pos=art[0];
+            size=art[1];
+
             this.bpos[data.box[i].id] = pos ; // boxのポジションを格納
+            this.size[data.box[i].id] = size;
         }
         for(var i in data.gene){
             this.setgene(data.gene[i]); // geneのidとinner情報を格納
@@ -29,6 +34,15 @@ var mdg_draw = function(_base) {
         for(var id in this.bpos) {　// boxの位置情報を更新
             $('#'+id).css('left',this.bpos[id].x+"rem").css('top',this.bpos[id].y+"rem") ;
         }
+
+        //var base = this.base ;
+
+        for(var id in this.size) {　// boxの位置情報を更新
+          if(this.size[id]){
+            $('#'+id).css('width',this.size[id].w+"px").css('height',this.size[id].h+"px") ;
+          }
+        }
+
         var base = this.base ;
 
         // geneとarrow情報を削除・新たに設定
@@ -93,7 +107,7 @@ var mdg_draw = function(_base) {
         this.base.append(e) ;
         lp = {x:parseInt(pos.x) + round(parseInt(e.css('width'))/this.em)+2,y:parseInt(pos.y)+1};
 
-        return pos ; // boxのポジションをreturn, この後this.bposにセット。
+        return [pos,box.size] ;// boxのポジションをreturn, この後this.bposにセット。
     }
 
     // set gene information
@@ -323,6 +337,26 @@ var mdg_draw = function(_base) {
         }
     }
 
+    this.changeScale = function(MagPow){
+        for(var id in this.bpos) {　// boxの位置情報を更新
+            var px = parseFloat(this.bpos[id].x) * MagPow;
+            var py = parseFloat(this.bpos[id].y) * MagPow;
+            px=px.toFixed(2);
+            py=py.toFixed(2);
+
+            if(px>=0 && py >= 0)this.bpos[id] = {x:px, y:py};
+        }
+        for(var id in this.size){
+            if(this.size[id]){
+              var sw = parseFloat(this.size[id].w) * MagPow;
+              var sh = parseFloat(this.size[id].h) * MagPow;
+              sw=sw.toFixed(2);
+              sh=sh.toFixed(2);
+              this.size[id]={w:sw, h:sh};
+            }
+        }
+    }
+
     this.select = function(rect){
         this.deact()
         var l = parseFloat(rect.css("left"))/this.em;
@@ -335,7 +369,7 @@ var mdg_draw = function(_base) {
             }
         }
     }
-    
+
     this.removeActiveNode = function(text){
         var l = text.split("\n") ;
         var l2 = [];
@@ -367,7 +401,6 @@ var mdg_draw = function(_base) {
         }
         return l2.join("\n");
     }
-
     this.deact = function(){
         for(var id in this.bpos){
             if($('#'+id).hasClass("active")){
@@ -644,10 +677,12 @@ var mdg_draw = function(_base) {
             var a
             if(cl=="") continue ;
             if(a = this.m_h.exec(cl)) {
+
                 var pos = (this.bpos[a[1]]!=undefined)?this.bpos[a[1]]:{x:a[3],y:a[4]} ;
                 var css = a[7] ? "css("+a[7]+")" : "";
                 if(a[5] && a[6]){
-                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+","+a[5]+","+a[6]+">"+css;
+                    var siz = (this.size[a[1]]!=undefined)?this.size[a[1]]:{w:a[5],h:a[6]} ;
+                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+","+siz.w+","+siz.h+">"+css;
                 }else{
                     l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+">"+css ;
                 }
@@ -823,7 +858,7 @@ $(function() {
         if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
 		return false ;
 	});
-    
+
     $('.arrow').on("click", function(){
         var tmpId = $(this).attr('id');
         var a;
@@ -840,6 +875,28 @@ $(function() {
         undoSet(s);
         strRedo = [];
     });
+    //Scale Down
+    $('#rescale').on('click', function(){
+
+      b.changeScale(0.95);
+      b.redraw(data);
+
+      var s = b.upd_text($('#source').val()) ;
+  		$('#source').val(s);
+          undoSet(s);
+          strRedo = [];
+          });
+    //Scale UP
+    $('#upscale').on('click', function(){
+
+      b.changeScale(1.05);
+      b.redraw(data);
+
+      var s = b.upd_text($('#source').val()) ;
+      $('#source').val(s);
+          undoSet(s);
+          strRedo = [];
+          });
 
     // load
 	$('#b_load').on("click",function() {
@@ -863,7 +920,7 @@ $(function() {
 		$(this).attr("href","data:application/octet-stream;charset=UTF-8,"+encodeURIComponent($('#source').val())) ;
 		return true ;
 	})
-    
+
     // remove active box
     $(document).keydown(function(e){
         if(e.keyCode == 8 && e.ctrlKey){
@@ -886,7 +943,7 @@ $(function() {
                 if(!finalStrUndo){
                     runUndo();
                 }
-            }      
+            }
         }
         // keycode = 89 がy
         else if(e.keyCode == 89 && (e.ctrlKey || e.metaKey)){
@@ -899,12 +956,14 @@ $(function() {
                 data = b.parse(temp);
                 b.setobj(data);
                 if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-            }      
+            }
         }
     });
     */
-    
+
     // redo
+
+
     $('#redo').on('click', function(){
         if(strRedo.length != 0){
             var temp = strRedo.pop();
@@ -914,7 +973,7 @@ $(function() {
             data = b.parse(temp);
             b.setobj(data);
             if(checker) savelocal({"source":s,"fname":$('#i_fname').val()}) ;
-        }      
+        }
     });
         // undo
     $('#undo').on('click', function(){
@@ -934,7 +993,7 @@ $(function() {
             strUndo.push(temp);
             finalStrUndo = true;
         }else if(strUndo.length === 1 && checkRedo){
-            finalStrUndo = true; 
+            finalStrUndo = true;
         }else{
             finalStrUndo = false;
         }
