@@ -544,7 +544,7 @@ function setConnectPos(o,f) {
                 R6 = a[6]?a[6]:"";
                 R7 = a[7]?a[7]:"";
 
-                //alert(R3);
+                alert(R3);
 
                 var txt = '\
                 <table align=center style="transform:translateY(10px)"> \
