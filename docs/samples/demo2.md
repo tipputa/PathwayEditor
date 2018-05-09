@@ -2,4 +2,4 @@
 layout: pathwayEditor
 title:  "demo"
 ---
-../mdg/demo2_Glyceophopholipid_20180126.mdg
+../mdg/Sophingolipid_metabolism_Map_20180509_MS.mdg

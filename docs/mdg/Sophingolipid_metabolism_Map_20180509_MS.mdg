@@ -1,0 +1,315 @@
+//sphingolipid metabolism map
+//titles
+[ER] <6.83,66.82>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+Endoplasmic reticulum
+
+[Cytosol] <70,1>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+Cytosol
+
+[PlasmaMembraneName] <91.51,4.97>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+Plasma Membrane
+
+[LysosomeName] <82.14,16.54>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+Lysosome
+
+[cisGLD] <24.68,41.48>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+cis/medial Golgi
+
+[transGLD] <44.10,41.48>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+trans Golgi
+
+[TGNName] <71.40,41.48>css(font-size:20px;background:rgb(200,200,150;border:5px solid black;z-index:2)
+trans Golgi network
+
+//========================================Organelle boxes========================
+
+
+
+[ER1] <3.89,0.66,166.03,1024.31>css(background:rgb(200,255,10;border-right:50px solid rgb(200,200,0;box-shadow:none;z-index:1)
+[ER2] <11.03,52.92,1280.14,340.00>css(background:rgb(200,255,10;border-top:50px solid rgb(200,200,0;box-shadow:none;z-index:1)
+[ER3] <3.84,53.16,165.38,333.00>css(background:rgb(200,255,10;box-shadow:none;z-index:1)
+
+[PlasmaMembrane] <94.81,1.10,51.19,1154.37>css(background:rgb(100,100,100;box-shadow:none;z-index:1;)
+
+//Golgi
+[Golgi] <24.81,20.95,162.20,324.15>css(background:rgb(50,140,140;border:30px solid rgb(100,200,200;box-shadow:none;z-index:1)
+
+//Golgi
+[Golgi_trans] <35.84,20.95,404.71,324.15>css(background:rgb(50,140,140;border:30px solid rgb(100,200,200;box-shadow:none;z-index:1)
+
+
+//Trans Golgi network
+[TGN] <63.40,20.95,404.71,324.15>css(background:rgb(50,140,140;border:30px solid rgb(100,200,200;box-shadow:none;z-index:1)
+
+//Lysosome
+[Lysosome] (mark) <77.73,0.56,170.61,255.93>css(background:rgb(130,140,140;border:30px solid rgb(130,180,180;box-shadow:none;z-index:1)
+
+//=========================================Metabolites=====================================================
+//Palmitoyl-CoA
+[PalCoA] <12.68,1.66>
+PalCoA
+d=(l_w3)=>u[3KDS]
+
+//3-ketodihydrosphingosine 
+[3KDS] <12.68,7.17>
+3-KDS
+d=(l_w3)=>u[DHS]
+
+//dihydrosphingosine
+[DHS] <13.23,12.68>
+DHS
+d=(l_w3)=>u[DHC]
+
+//dihydroceramide
+[DHC] <13.23,17.64>
+DHC
+d=(l_w3)=>u[Cer]
+
+//Ceramide
+[C1P] <66.71,15.44>
+!SP{O-PO3}
+C1P
+r=(l_w)=>[PlasmaMembrane]
+
+//Ceramide
+[Cer] <12.13,23.15>
+!SP{O}
+Cer
+r=(l_w3)=>u[GlcCer]
+r=(l_w3)=l[CERT]
+
+//Ceramide
+[Cer2] <38.33,25.73>
+Cer
+u=(l_w3)=>u[SM]
+
+//Ceramide
+[Cer3] <56.18,18.90>
+Cer
+
+//Ceramide
+[Cer4] <63.95,18.19>
+Cer
+d=(l_w3)=>d[C1P]
+
+//Ceramide
+[Cer5] <13.79,45.76>
+Cer
+
+//Ceramide
+[Cer6] <52.92,51.82>
+Cer
+
+//Ceramide
+[Cer7] <97.02,19.30>
+Cer
+u=(l_w3)=>d[SM4]
+
+//Ceramide
+[Cer8] <80.48,4.97>
+Cer
+
+//Ceramide
+[Cer9] <79.94,11.03>
+Cer
+
+//Sphingosine
+[Sph] <13.23,32.53>
+Sph
+u=(l_w3)=>d[Cer]
+
+//Glucosylceramide
+[GlcCer] <19.30,29.77>
+!SP{O-Glc}
+GlcCer
+d=(l_w3)=>[GlcCer2]
+d=(l_w3)=l[FAPP2]
+d=(l_w3)=>u[Cer5]
+
+//Glucosylceramide
+[GlcCer2] <28.12,35.84>
+GlcCer
+r=(l_w3)=>l[GlcCer3]
+
+//Glucosylceramide
+[GlcCer3] <38.33,35.18>
+GlcCer
+d=(l_w3)=>l[LacCer]
+
+//Glucosylceramide
+[GlcCer4] <66.71,38.04>
+GlcCer
+l=(l_w3)=>L[LacCer2]
+
+//Glucosylceramide
+[GlcCer5] <83.79,11.03>
+GlcCer
+d=(l_w3)=>d[Cer9]
+
+//Lactosylceramide
+[LacCer] <46.5,36>
+!SP{O-Glc-Gal}
+LacCer
+r=(l_w3)=>r[GM3]
+
+//Lactosylceramide
+[LacCer2] <67,32.5>
+!SP{O-Glc-Gal}
+LacCer
+l=(l_w3)=>L[GB3]
+d=(l_w3)=>d[GA2]
+
+//Globotriaosylceramide
+[GB3] <66.5,27.5>
+!SP{O-Glc-Gal-Gal}
+Gb3
+r=(l_w)=>[PlasmaMembrane]
+
+//Globoside
+[GA2] <76.07,34.73>
+!SP{O-Glc-Gal-GalNAc}
+GA2
+r=(l_w)=>[PlasmaMembrane]
+
+//asialoGM１
+[GM3] <45.15,30.45>
+!SP{O-Glc-Gal|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSA}
+GM3
+
+//asialoGM 3
+[GM2] <71.5,22.5>
+!SP{O-Glc-Gal-GalNAc|&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSA|}
+GM2
+r=(l_w)=>[PlasmaMembrane]
+
+//GM1
+[SM] <43.05,25.20>
+!SP{O-Choline}
+SM
+r=(l_w3)=>d[Cer3]
+
+//Sphingomyelin
+[SM2] <64.50,51.82>
+SM
+l=(l_w3)=>r[Cer6]
+
+//Sphingomyelin
+[SM3] <100.33,26.46>
+SM
+u=(l_w3)=>d[Cer7]
+
+//Sphingomyelin
+[SM4] <96.47,12.13>
+SM
+
+//Sphingomyelin
+[SM5] <84.35,4.97>
+SM
+u=(l_w3)=>u[Cer8]
+//===============================================gene========================================
+//serine palmitoyl transferase
+[SPT] <13.23,3.86>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+SPT
+
+//3-ketodihydrosphingosine reductase
+[KDSR] <12.68,9.38>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+KDSR
+
+//ceramide synthase
+[CerS] <12.68,14.33>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+CerS
+
+//ceramide synthase
+[CerS2] <12.68,29.22>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+CerS
+
+
+//dihydroceramide Δ4-desaturase
+[DES] <12.68,19.84>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+DES
+
+
+
+//UDP-glucose:ceramide glucosyltransferase
+[UGCG] <21.50,26.46>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+UGCG
+
+//Unknown Gene
+[Ugen] <24.81,35.84>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+?
+
+//Unknown Gene
+[Ugen2] <63.95,39.69>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+?
+
+//Unknown Gene
+[Ugen3] <38.33,19.95>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+?
+
+//β-1,4-galactosyltransferase5 and 6 
+[B4GalT5] <39.38,37.80>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+B4GalT5
+
+//β-1,4-galactosyltransferase5 and 6 
+[B4GalT5-2] <62.84,36.38>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+B4GalT5
+
+//ST3β-galactoside α-2,3-sialyltransferase 5 
+[ST3GalT5] <56.23,34.18>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+ST3GalT5
+
+//Sphingomyelin synthase 1
+[SMS1] <42.00,22.05>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+SMS1
+
+//Sphingomyelin synthase 2
+[SMS2] <95.37,15.44>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+SMS2
+
+//neutral SMase 2
+[NSMase2] <53.55,21.53>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+NSMase 2
+
+//neutral SMase 2
+[NSMase1] <57.33,51.27>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+NSMase 1
+
+//four-phosphate adaptor protein 2
+[FAPP2] <24.81,45.76>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+transferred by FAPP2
+r=(l_w3)=>d[GlcCer4]
+
+//α-1,4-galactosyltransferase
+[A4GalT] <62.30,31.97>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+A4GalT
+
+//β-1,4-N-acetylgalactosaminyltransferase 1 (GM2/GD2 synthase)
+[B4GalNT1] <72.5,39>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+B4GalNT1
+
+//ceramide transfer protein
+[CERT] <33.08,15.23>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+transferred by CERT
+d=(l_w3)=>u[Cer2]
+r=(l_w3)=>l[Cer4]
+
+//ceramidekinase 
+[CERK] <66.71,20.40>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+CERK
+
+//β-glucosidases 1
+[GBA1] <81.59,13.23>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+GBA1
+
+//β-glucosidases 2
+[GBA2] <12.68,42.45>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+GBA2
+
+//acidic SMase
+[ASMase] <98.12,23.15>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+ASMase
+
+//acidic SMase
+[ASMase2] <81.59,1.66>css(background:rgb(255,200,50;border:5px solid rgb(255,100,50;z-index:5)
+ASMase
+
