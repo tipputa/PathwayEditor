@@ -21,16 +21,16 @@ var mdg_draw = function(_base) {
             this.setgene(data.gene[i]); // geneのidとinner情報を格納
         }
         var self = this ;
-        this.redraw(data,delay); 
+        this.redraw(data,delay);
     }
-    
+
     // redraw (this.connect)
-    this.redraw = function(data,delay) {	
+    this.redraw = function(data,delay) {
         for(var id in this.bpos) {　// boxの位置情報を更新
             $('#'+id).css('left',this.bpos[id].x+"rem").css('top',this.bpos[id].y+"rem") ;
         }
         var base = this.base ;
-        
+
         // geneとarrow情報を削除・新たに設定
         $("#base .label").remove();
         $("svg", base).remove() ;
@@ -44,12 +44,12 @@ var mdg_draw = function(_base) {
             base.append("<svg>"  + s.join("") + "</svg>"); // arrowの設定
         },this),(delay==true)?500:0) ;
     }
-    
-    // create dom block 
+
+    // create dom block
     this.create = function(editable, box) {
         var d = editable?"true":"false" ;
         var type,inner;
-        
+
         // tableかdivか判定。#や---が使用されていた場合はtable形式のboxになる
         if(typeof box.inner == "object" || box.title!=null) {
             if(typeof box.inner != "object") box.inner = [box.inner] ;
@@ -57,7 +57,7 @@ var mdg_draw = function(_base) {
                 var tt = box.inner[tr].split(" | ") ;
                 if(tt.length>1) {
                     box.inner[tr] = tt.join("</td><td>") ;
-                } 
+                }
             }
             type ="<table>" ;
             inner = "<tr><td>"+box.inner.join("</td></tr><tr><td>")+"</td></tr>";
@@ -66,7 +66,7 @@ var mdg_draw = function(_base) {
             type = "<div>" ;
             inner = box.inner;
         }
-        
+
         var pos = box.pos ;
         if(pos==undefined) {
             pos =  lp ;
@@ -89,13 +89,13 @@ var mdg_draw = function(_base) {
                 if(css2.length>1) e.css(css2[0].trim(), css2[1].trim());
             }}
         }
-        
+
         this.base.append(e) ;
         lp = {x:parseInt(pos.x) + round(parseInt(e.css('width'))/this.em)+2,y:parseInt(pos.y)+1};
 
         return pos ; // boxのポジションをreturn, この後this.bposにセット。
     }
-    
+
     // set gene information
     this.setgene = function(gene) {
         var g = {id:gene.id, inner:gene.inner, cls:gene.cls, count:1};
@@ -103,13 +103,13 @@ var mdg_draw = function(_base) {
     }
 
 
-    // draw connect line 
+    // draw connect line
     this.connect = function(o1,o2,param) {
         if(o1.length==0 || o2.length==0) return null ;
         // start & end positionを2つのboxとconnectionのparameterから計算
-        var sp = setConnectPos(o1, param.s_pos) ; 
+        var sp = setConnectPos(o1, param.s_pos) ;
         var ep = setConnectPos(o2, param.e_pos) ;
-        
+
         var fillcol = "#2c3e50"; // cssで設定されてる初期color; 適宜変更が必要
 
         // gene labelに関するパート
@@ -129,36 +129,36 @@ var mdg_draw = function(_base) {
                     g = $("<div>").addClass("label").attr("title",id).attr("id", newid).html(gene.inner).css('left', mp.x+"px").css('top',mp.y+"px");
                     this.base.append(g);
                     gene.count = gene.count + 1;
-                    
+
                     // classの追加
                     if(gene.cls) {
                         if(typeof gene.cls == "string") gene.cls = [gene.cls] ;
                           for(var j in gene.cls) g.addClass(gene.cls[j]) ;
                     }
-                    
+
                     // gene position (u|d|l|r)の判別・位置反映 =[]u()=>
                     // gposのが未指定の場合は中点にプロットされる。
                     var Rawwidth = g.get(0).offsetWidth; // 描画時のサイズ取得
                     var RawHeight = g.get(0).offsetHeight;
                     var margine = 5; // arrowのmargine
                     var margine2 = 10; // gene labelのmargine
-                    
+
                     if(param.gpos != undefined){
                         if(param.gpos.match(/^u/)){ // 上側にshift
-                            g.css('left',(mp.x - Rawwidth/2)+"px").css('top',(mp.y - RawHeight - margine2)+"px"); 
+                            g.css('left',(mp.x - Rawwidth/2)+"px").css('top',(mp.y - RawHeight - margine2)+"px");
                             // arrowの為にstart endも修正
-                            ep.y = ep.y - margine; 
+                            ep.y = ep.y - margine;
                             sp.y = sp.y -margine;
                         } else if(param.gpos.match(/^d/)){ // 下側にshift
-                            g.css('left',(mp.x - Rawwidth/2)+"px").css('top',(mp.y + margine2)+"px"); 
+                            g.css('left',(mp.x - Rawwidth/2)+"px").css('top',(mp.y + margine2)+"px");
                             ep.y = ep.y + margine;
                             sp.y = sp.y + margine;
                         } else if(param.gpos.match(/^l/)){ // 左側にshift
-                            g.css('left',(mp.x - Rawwidth - margine2)+"px").css('top',(mp.y - RawHeight/2)+"px"); 
+                            g.css('left',(mp.x - Rawwidth - margine2)+"px").css('top',(mp.y - RawHeight/2)+"px");
                             ep.x = ep.x - margine;
                             sp.x = sp.x - margine;
                         } else if(param.gpos.match(/^r/)){ // 右側にshift
-                            g.css('left',(mp.x + margine2)+"px").css('top',(mp.y - RawHeight/2)+"px"); 
+                            g.css('left',(mp.x + margine2)+"px").css('top',(mp.y - RawHeight/2)+"px");
                             ep.x = ep.x + margine;
                             sp.x = sp.x + margine;
                         }
@@ -169,10 +169,10 @@ var mdg_draw = function(_base) {
             }
         }
 
-        
+
         // 以下はarrowに関するパート
         var ret = [];
-        
+
         // class情報の格納
         var cls = "" ;
         if(param.cls) {
@@ -190,12 +190,12 @@ var mdg_draw = function(_base) {
             }
             if(cc.length>0) cls = 'class="'+cc.join(" ")+'"' ;
         }
-        
+
         // startとendが10px以下のずれの場合、矢印のend pointをstartと合わせる（直線にする）
         var diffPos = 10;
         if(Math.abs(sp.x - ep.x) < diffPos) {ep.x = sp.x; param.type=="S";}
         else if (Math.abs(sp.y - ep.y) < diffPos) {ep.y = sp.y; param.type=="S";}
-        
+
         // 矢印ライン部分の追加
         // 直線の場合
         if(param.type=="S") {
@@ -204,8 +204,8 @@ var mdg_draw = function(_base) {
             var pm = 50 ;
             ret.push('<path d="M ' + sp.x + ' ' + sp.y + ' C ' + (sp.x+sp.vx*pm) + ' ' + (sp.y+sp.vy*pm) + ' ' + (ep.x+ep.vx*pm) + ' ' + (ep.y+ep.vy*pm)  + ' ' + (ep.x) + ' ' + (ep.y) + '" ' + cls  + ' ' + 'fill="None" />') ;
         }
-        
-        // 矢印三角部分の追加 
+
+        // 矢印三角部分の追加
         if(param.arrow) {
             var th = 3.14159*35/180 ;
             var an = 10 ;
@@ -214,7 +214,7 @@ var mdg_draw = function(_base) {
                 var px = v.x * Math.cos(th) - v.y * Math.sin(th) ;
                 var py = v.x * Math.sin(th) + v.y * Math.cos(th) ;
                 var vn = Math.sqrt(px*px+py*py) ;
-                return {x:px/vn,y:py/vn} ;		
+                return {x:px/vn,y:py/vn} ;
             }
             function av(sp,ep) {
                 v = (param.type=="S")?{x:sp.x-ep.x ,y:sp.y-ep.y}:{x:ep.vx,y:ep.vy} ;
@@ -227,14 +227,14 @@ var mdg_draw = function(_base) {
         }
         return ret //	return {sp:sp,ep:ep} ;
     }
-    
+
 // connectionの位置を計算
 function setConnectPos(o,f) {
     var sx = parseInt(o.css('left')) ;
     var sy = parseInt(o.css('top')) ;
     var w = parseInt(o.css('width')) ;
     var h = parseInt(o.css('height')) ;
-    var tagName = o.prop("tagName");	
+    var tagName = o.prop("tagName");
     var px,py,vx,vy ;
     var t = $('tr',o) ;
     var d = $('th,td',o) ;
@@ -300,14 +300,14 @@ function setConnectPos(o,f) {
 
     // round
     function round(x) { return Math.floor(x*10)/10; }
-    
+
     // handlerで使用。boxのdrag&drop時に値を返す。
     this.setpos = function(id,x,y) {
         var px = parseFloat(x)>0?parseFloat(x):1;
-        var py = parseFloat(y)>0?parseFloat(y):1;        
+        var py = parseFloat(y)>0?parseFloat(y):1;
         this.bpos[id] = {x:px,y:py} ;
     }
-    
+
     this.changeAllPos = function(opt){
         var addX, addY, size = 2;
         switch (opt){
@@ -322,7 +322,7 @@ function setConnectPos(o,f) {
             if(px>=0 && py >= 0)this.bpos[id] = {x:px, y:py};
         }
     }
-    
+
     this.select = function(rect){
         this.deact()
         var l = parseFloat(rect.css("left"))/this.em;
@@ -335,7 +335,7 @@ function setConnectPos(o,f) {
             }
         }
     }
-    
+
     this.deact = function(){
         for(var id in this.bpos){
             if($('#'+id).hasClass("active")){
@@ -343,14 +343,14 @@ function setConnectPos(o,f) {
             }
         }
     }
-    
+
     this.drop = function(mag){
         var ox = (this.dragDrop.pX - this.dragDrop.preX)/mag ;
         var oy = (this.dragDrop.pY - this.dragDrop.preY)/mag ;
         for(var id in this.bpos){
             if($('#'+id).hasClass("active")){
                 var ex = parseInt($('#'+id).css("left")) ;
-                var ey = parseInt($('#'+id).css("top")) ;                
+                var ey = parseInt($('#'+id).css("top")) ;
                 var px = Math.floor(((ex+ox)/this.em+0.25)*2)/2 ;
                 var py = Math.floor(((ey+oy)/this.em+0.25)*2)/2 ;
                 this.setpos(id,px,py) ;
@@ -365,7 +365,7 @@ function setConnectPos(o,f) {
       return height;
     }
 
-    
+
 
     // text 関連
     // md parser
@@ -375,7 +375,7 @@ function setConnectPos(o,f) {
         var box = [] ;
         var conn = [] ;
         var genes = [];
-        
+
         // pattern
         var m_g = /^g\[([A-z0-9-_]+)\]\s*(?:\((.*)\))?\s*?$/;
         var m_comm = /^\/\// ;
@@ -390,6 +390,8 @@ function setConnectPos(o,f) {
         var m_GL = /^!GL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
         var m_PG = /^!PG\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for Phosphatidylglycerol
         var m_CL = /^!CL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?}$/; // for Cardiolipin
+        var m_SP = /^!SP\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for sphingolipid
+
 
         var l = text.split("\n") ;
         var b = {id:"",bl:[], check:false} ;
@@ -399,10 +401,10 @@ function setConnectPos(o,f) {
         for(var i in l) {
             var cl = l[i] ;
             cl=cl.replace(/&lt;/g,"<"); // for wiki
-            cl=cl.replace(/&gt;/g,">"); 
-            
+            cl=cl.replace(/&gt;/g,">");
+
             var a, g;
-            
+
             // wikiTag or blank
             if(cl =="" || m_comm.exec(cl) || cl.match(m_wiki)){continue;}
             else if(a = this.m_h.exec(cl)) { // set box info
@@ -444,7 +446,7 @@ function setConnectPos(o,f) {
         if(b.bl.length>0) pbox(b);
         if(gene.gl.length>0) pgene(gene);
         // read end
-        
+
          // share parser
         function sparser(cl, ll, llp){
             var a;
@@ -493,7 +495,7 @@ function setConnectPos(o,f) {
                 <tr><td nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr> \
                 <tr><td nowrap align=left  style="line-height:50%;">' + fontChange(R3)+ '</td></tr></table>';
                 ll.push(txt);
-                
+
             }else if (a = m_PG.exec(cl)){
                 R1 = a[1]?a[1]:"";
                 R2 = a[2]?a[2]:"";
@@ -531,29 +533,47 @@ function setConnectPos(o,f) {
                 <td rowspan=3><img src=img/GL2.png style=" height:50px;transform:translateX(18px);"/ ></td> \
                 <td nowrap align=right style="line-height:50%;">'+fontChange(R5)+'</td>\
                 </tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R6)+'</td></tr>\
-                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R7)+'</td></tr> </table>'    
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R7)+'</td></tr> </table>'
                 ll.push(txt);
-            } else { // その他のテキスト
+            } else if(a = m_SP.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                R6 = a[6]?a[6]:"";
+                R7 = a[7]?a[7]:"";
+
+                //alert(R3);
+
+                var txt = '\
+                <table align=center style="transform:translateY(10px)"> \
+                <tr><td rowspan=3><img src=img/SP.png style=" height:20px;transform:translateX(18px);"/ ></td>\
+                <td colspan=2 nowrap align=left vertical-align=top style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=left  style="line-height:50%;">'+fontChange(R3)+'</td></table>'
+                ll.push(txt);
+            }else { // その他のテキスト
                 cl = fontChange(cl);
                 ll.push(cl) ;
             }
         }
-        
+
         // gene labelの作成
-        function pgene(g) { 
+        function pgene(g) {
             var ll = [];
             var llp = []; // popup tag用
             var a ;
             for(var i in g.gl) {
                 sparser(g.gl[i], ll, llp) ;
-            }            
+            }
             var l = ll.join("<br/>");
             genes.push( {id:g.id,inner:l,cls:g.cls} ) ;
         }
-    
+
 
         // boxの作成
-        function pbox(b) { 
+        function pbox(b) {
             var l = [] ;
             var ll = [] ;
             var llp = [];
@@ -576,7 +596,7 @@ function setConnectPos(o,f) {
                     if(a[7]!=undefined) tp = a[7] ;
                     // connectionの設定, geneでgeneid, gposで[u|d|l|r]
                     conn.push( {from:b.id,to:a[8],param:{
-                        s_pos:(fp+(l.length+((b.title!=null)?1:0))),e_pos:tp,cls:a[5],arrow:ar, gene:a[3], gpos:a[4]}}) ; 
+                        s_pos:(fp+(l.length+((b.title!=null)?1:0))),e_pos:tp,cls:a[5],arrow:ar, gene:a[3], gpos:a[4]}}) ;
                 } else {
                     sparser(cl, ll, llp);
                 }
@@ -588,7 +608,7 @@ function setConnectPos(o,f) {
         }
         return {box:box, conn:conn, gene:genes} ;
     }
-    
+
     this.searchPosition = function(text,w,tag){
         var l = text.split("\n") ;
         var height = 0;
@@ -608,7 +628,7 @@ function setConnectPos(o,f) {
         var l = text.split("\n") ;
         for(var i in l) {
             var cl = l[i] ;
-            var a 
+            var a
             if(cl=="") continue ;
             if(a = this.m_h.exec(cl)) {
                 var pos = (this.bpos[a[1]]!=undefined)?this.bpos[a[1]]:{x:a[3],y:a[4]} ;

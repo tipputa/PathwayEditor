@@ -401,6 +401,40 @@ var mdg_draw = function(_base) {
         }
         return l2.join("\n");
     }
+
+    this.lateralPullPush = function(text){
+      var l = text.split("\n") ;
+      var l2 = [];
+      var activeCheck = false;
+      for(var i in l) {
+          var cl = l[i] ;
+          var a
+          if(a = this.m_h.exec(cl)) {
+              if($('#'+a[1]).hasClass("active")){
+                  console.info(a[1]);
+                  activeCheck = true;
+                  alert(data.box[a[1]].id.size.w);
+              }
+              else{
+                  activeCheck = false;
+                  l2.push(cl)
+              }
+          }else if(a = m_g.exec(cl)){
+              activeCheck = false;
+              l2.push(cl);
+          }else if(a = m_conn.exec(cl)){
+              if($('#'+a[8]).hasClass("active")){
+                  console.info(a[8] + ", edge");
+              }else if(!activeCheck){
+                  l2.push(cl);
+              }
+          }else if(!activeCheck){
+              l2.push(cl);
+          }
+      }
+    return l2.join("\n");
+    }
+
     this.deact = function(){
         for(var id in this.bpos){
             if($('#'+id).hasClass("active")){
@@ -456,6 +490,7 @@ var mdg_draw = function(_base) {
         var m_GL = /^!GL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
         var m_PG = /^!PG\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for Phosphatidylglycerol
         var m_CL = /^!CL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?}$/; // for Cardiolipin
+        var m_SP = /^!SP\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
 
         var l = text.split("\n") ;
         var b = {id:"",bl:[], check:false} ;
@@ -599,7 +634,25 @@ var mdg_draw = function(_base) {
                 </tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R6)+'</td></tr>\
                 <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R7)+'</td></tr> </table>'
                 ll.push(txt);
-            } else { // その他のテキスト
+            } else if(a = m_SP.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                R6 = a[6]?a[6]:"";
+                R7 = a[7]?a[7]:"";
+
+                //alert(R3);
+
+                var txt = '\
+                <table align=center style="transform:translateY(10px)"> \
+                <tr><td rowspan=3><img src=img/SP.png style=" height:20px;transform:translateX(18px);"/ ></td>\
+                <td colspan=2 nowrap align=left vertical-align=top style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=left  style="line-height:50%;">'+fontChange(R3)+'</td></table>'
+                ll.push(txt);
+            }else { // その他のテキスト
                 cl = fontChange(cl);
                 ll.push(cl) ;
             }
@@ -923,12 +976,22 @@ $(function() {
 
     // remove active box
     $(document).keydown(function(e){
-        if(e.keyCode == 8 && e.ctrlKey){
-            var s = b.removeActiveNode($("#source").val());
+        if(e.ctrlKey){
+          if(e.keyCode == 8){
+              var s = b.removeActiveNode($("#source").val());
+              $("#source").val(s);
+              b.setobj(b.parse(s));
+              undoSet(s);
+          }
+        else if(e.shiftKey){
+            alert("left_phshed");
+            var s = b.lateralPullPush($("#source").val());
             $("#source").val(s);
             b.setobj(b.parse(s));
             undoSet(s);
-    }});
+          }
+    }
+  });
 
 
     /* keydownでredo or undo
