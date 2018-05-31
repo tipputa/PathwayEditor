@@ -1,18 +1,22 @@
-/* mdg basic css*/
-div.mdg {
+/* mdpe basic css*/
+div.mdpe {
+user-select:none;
+-webkit-user-select:none;
+-ms-user-select: none;
+-moz-user-select:none;
+-khtml-user-select:none;
 	position:relative ;
 	box-sizing:border-box;
 }
-div.mdg svg {
+div.mdpe svg {
 	position:absolute ;
 	width:100% ;
 	height:100% ;
-	z-index:1 ;
+	z-index:4 ;
 	pointer-events: none;
 }
-div.mdg .box {
+div.mdpe .box {
 	position:absolute ;
-	border:none;
     color:#08233E;
 	background-color:white;/* rgb(243, 255, 228);*/
 	line-height:100% ;
@@ -25,11 +29,30 @@ div.mdg .box {
     padding-left:0.5em;
     padding-right:0.5em;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    z-index: 3;
 }
-div.mdg .label {
+div.mdpe .label {
     position:absolute;
     font-size:0.8em;
-    z-index:2;
+    z-index:5;
+    box-sizing: border-box;
+    border-radius:0.5em;
+    padding-top:0.25em;
+    padding-bottom:0.25em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    background-color: #FFE0B2;
+    font-family: 'Helvetica';
+    border:1px solid #E65100;
+    color:#1A237E;
+    box-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
+}
+
+div.mdpe .gene {
+    font-size:0.8em;
+    z-index:5;
+    text-align:left;
+    line-height:normal;
     border-radius:0.5em;
     padding-top:0.25em;
     padding-bottom:0.25em;
@@ -41,19 +64,31 @@ div.mdg .label {
     box-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
 }
 
-div.mdg a {
+div.mdpe .rectangle{
+    background: rgba(255, 166, 166, 0.38);
+    border: 1px solid red;
+    position: absolute;
+}
+
+div.mdpe .active{
+    border-color:red;
+    box-shadow: 3px 3px 5px #ff0000;
+}
+
+div.mdpe a {
 /*  text-transform: uppercase;*/
   color:blueviolet;
   text-decoration: none;
   position: relative;
   border-bottom: solid 1px blueviolet;
+  overflow:hidden;
 }
 
-div.mdg a:hover {
+div.mdpe a:hover {
   color: #054176;
 }
 
-div.mdg a:before {
+div.mdpe a:before {
   content: '';
   border-bottom: solid 1px #054176;
   position: absolute;
@@ -62,24 +97,24 @@ div.mdg a:before {
   opacity: 0;
 }
 
-div.mdg a:hover:before {
+div.mdpe a:hover:before {
   opacity: 1.0;
 }
 
-div.mdg a, div.mdg a:before {
+div.mdpe a, div.mdpe a:before {
   -webkit-transition: all 0.2s ease;
           transition: all 0.2s ease;
 }
 
-div.mdg div.box {
+div.mdpe div.box {
 	text-align:center ;
 }
-div.mdg table.box {
+div.mdpe table.box {
 	border-collapse: collapse ;
 	margin:0 ;
     border-radius:0.5em;
 }
-div.mdg table td {
+div.mdpe table td {
     border-radius:0.5em;
     padding-top:0.2em;
     padding-bottom:0.2em;
@@ -88,7 +123,7 @@ div.mdg table td {
    /* border-top: 2px solid white*/
 }
 
-div.mdg table th {
+div.mdpe table th {
 	background-color:#0C555D ;/*Bittersweet*/
     color:white;
 	text-align: center ;
@@ -99,11 +134,11 @@ div.mdg table th {
     border-top-left-radius: 0.5em;
     border-top-right-radius: 0.5em;
 }
-div.mdg svg line {
+div.mdpe svg line {
 	stroke:#000 ;
 	stroke-width:2px ;
 }
-div.mdg svg path {
+div.mdpe svg path {
 	stroke:#2c3e50 ; 
     stroke-width:1px;
 }
@@ -113,12 +148,37 @@ figure {
 }
 
 /* preset class */
-div.mdg div.trans {
+div.mdpe div.trans {
 	background:none ;
 	border:none ;
     box-shadow:None;
 }
-div.mdg div.image, div.mdg div.image2, div.mdg div.image50, div.mdg div.image100 div.mdg div.image200{
+div.mdpe .transB, div.mdpe .transB1{
+    z-index: 0;
+    background:none ;
+    color:none;
+    border: 2px solid black;
+    box-shadow:none;
+}
+
+div.mdpe .transB2{
+    z-index: 0;
+    background:none ;
+    color:none;
+    border: 4px solid black;
+    box-shadow:none;
+}
+
+div.mdpe .mark{
+    z-index:10;
+    font-size:1px;
+    background:none;
+    border: 2px solid red;
+    box-shadow:none;
+    border-radius:500px
+}
+
+div.mdpe div.image, div.mdpe div.image2, div.mdpe div.image50, div.mdpe div.image100 div.mdpe div.image200{
 	background-color:white;
 	padding-left:1em ;
 	padding-right:1em ;
@@ -126,7 +186,7 @@ div.mdg div.image, div.mdg div.image2, div.mdg div.image50, div.mdg div.image100
 	padding-bottom:0.3em ;
 }
 
-div.mdg div.image2 {
+div.mdpe div.image2 {
 	background-color:white;
 	padding-left:3em ;
 	padding-right:3em ;
@@ -134,219 +194,256 @@ div.mdg div.image2 {
 	padding-bottom:0.5em ;
 }
 
-div.mdg div.image img {
+div.mdpe div.image img {
 	max-width:300px ;	
 }
-div.mdg div.image50 img{
+div.mdpe div.image50 img{
     max-width:50px;
 }
 
-div.mdg div.image100 img{
+div.mdpe div.image100 img{
     max-width:100px;
 }
 
-div.mdg div.image200 img{
+div.mdpe div.image200 img{
     max-width:200px;
 }
 
 
 /* text/stroke color */
-div.mdg .red {
+div.mdpe .red {
 	color:red ;
 	stroke:#f00 ;
 }
-div.mdg .blue {
+div.mdpe .blue {
 	color:blue ;
 	stroke:#00f ;
 }
-div.mdg .green {
+div.mdpe .green {
 	color:blue ;
 	stroke:#0f0 ;
 }
-div.mdg .white {
+div.mdpe .white {
 	color:white ;
 	stroke:#fff ;
 }
-div.mdg .gray {
+div.mdpe .gray {
 	color:blue ;
 	stroke:#888 ;
 }
 /* border color */
-div.mdg .bd_red {
+div.mdpe .bd_red {
 	border-color:red ;
 }
-div.mdg .bd_blue {
+div.mdpe .bd_blue {
 	border-color:blue ;
 }
-div.mdg .bd_green {
+}
+div.mdpe .bd_green {
 	border-color:green ;
 }
 /* bg color */
-div.mdg .bg_red {
+div.mdpe .bg_red {
 	background-color:#fee ;
 }
-div.mdg .bg_blue {
+div.mdpe .bg_blue {
 	background-color:#eef ;
 }
-div.mdg .bg_green {
+div.mdpe .bg_green {
 	background-color:#efe ;
 }
-div.mdg .bg_g25 {
+div.mdpe .bg_g25 {
 	background-color:#444 ;
 }
-div.mdg .bg_g50 {
+div.mdpe .bg_g50 {
 	background-color:#888 ;
 }
-div.mdg .bg_g75 {
+div.mdpe .bg_g75 {
 	background-color:#ccc ;
 }
-div.mdg .bg_black {
+div.mdpe .bg_black {
 	background-color:#000 ;
 }
 /* line style */
-div.mdg .l_w1 {
+div.mdpe .l_w1 {
 	stroke-width:1px ;
 }
-div.mdg .l_w2 {
+div.mdpe .l_w2 {
 	stroke-width:2px ;
 }
-div.mdg .l_w3 {
+div.mdpe .l_w3 {
 	stroke-width:3px ;
 }
-div.mdg .l_w4 {
+div.mdpe .l_w4 {
 	stroke-width:4px ;
 }
-div.mdg .l_w5 {
+div.mdpe .l_w5 {
 	stroke-width:5px ;
 }
-div.mdg .l_d10 {
+div.mdpe .l_d10 {
 	stroke-dasharray:10px ;
 }
+
 /* border radius */
-div.mdg .bd_r6 {
+div.mdpe .bd_r6 {
 	border-radius:6px ;
 }
-div.mdg .bd_r10 {
+div.mdpe .bd_r10 {
 	border-radius:10px ;
 }
-div.mdg .bd_r20 {
+div.mdpe .bd_r20 {
 	border-radius:20px ;
 }
-div.mdg .circle4 {
+div.mdpe .circle4 {
 	width:4em;
 	height:4em ;
 	text-align:center ;
 	padding-top:1em ;
 	border-radius:2em ;
 }
+
+div.mdpe .triangle {
+	/* 大きさの設定 (borderだけで描くので、widthとheightは0でよい) */
+    width: 0px;
+    height: 0px;
+
+	/* borderをうまく使って三角形を描く (高さ: 45px, 横幅: 28×2=56px) */
+    border-bottom: solid 45px black;
+    border-left: solid 28px transparent;
+    border-right: solid 28px transparent;
+    
+    padding:0;
+    box-shadow: none;
+    background-color:inherit;
+}
+
 /* alignment */
-div.mdg div.TC,table.TC {
+div.mdpe div.TC,table.TC {
 	text-align:center ;
 }
-div.mdg div.TR,table.TR {
+div.mdpe div.TR,table.TR {
 	text-align:right ;
 }
-div.mdg div.TL,table.TL {
+div.mdpe div.TL,table.TL {
 	text-align:left ;
 }
 /* font-style */
-div.mdg .bold {
+div.mdpe .bold {
 	font-weight:bold ;
 }
-div.mdg .FB {
+div.mdpe .FB {
 	font-weight:bold ;
 }
-div.mdg .FI {
+div.mdpe .FI {
 	font-style: italic ;
 }
-div.mdg .FM {
+div.mdpe .FM {
 	font-family:monospace;
 }
 /*　font-size */
-div.mdg .F05 {
+div.mdpe .F05 {
 	font-size:0.5rem ;
 }
-div.mdg .F08 {
+div.mdpe .F08 {
 	font-size:0.8rem ;
 }
-div.mdg .F15 {
+div.mdpe .F15 {
 	font-size:1.5rem ;
 }
-div.mdg .F20 {
+div.mdpe .F20 {
 	font-size:2.0rem ;
 }
-div.mdg .small1{
+div.mdpe .small1{
     font-size:0.1em;
 }
-div.mdg .small2{
+div.mdpe .small2{
     font-size:0.2em;
 }
-div.mdg .small3{
+div.mdpe .small3{
     font-size:0.3em;
 }
-div.mdg .small4{
+div.mdpe .small4{
     font-size:0.4em;
 }
-div.mdg .small5{
+div.mdpe .small5{
     font-size:0.5em;
 }
-div.mdg .small6{
+div.mdpe .small6{
     font-size:0.6em;
 }
-div.mdg .small7{
+div.mdpe .small7{
     font-size:0.7em;
 }
-div.mdg .small8{
+div.mdpe .small8{
     font-size:0.8em;
 }
-div.mdg .small9{
+div.mdpe .small9{
     font-size:0.9em;
 }
 /* paddng */
-div.mdg .P05 {
+div.mdpe .P05 {
 	padding:0.5rem ;
 }
-div.mdg .P10 {
+div.mdpe .P10 {
 	padding:1rem ;
 }
-div.mdg .P15 {
+div.mdpe .P15 {
 	padding:1.5rem ;
 }
-div.mdg .P20 {
+div.mdpe .P20 {
 	padding:2rem ;
 }
 /* box sizes */
-div.mdg .W05 {
+div.mdpe .W05 {
 	width:5rem ;
 }
-div.mdg .W10 {
+div.mdpe .W10 {
 	width:10rem ;
 }
-div.mdg .W15 {
+div.mdpe .W15 {
 	width:15rem ;
 }
-div.mdg .W20 {
+div.mdpe .W20 {
 	width:20rem ;
 }
-div.mdg .H2 {
+div.mdpe .H2 {
 	height:2rem ;
 }
-div.mdg .H3 {
+div.mdpe .H3 {
 	height:3rem ;
 }
-div.mdg .H4 {
+div.mdpe .H4 {
 	height:4rem ;
 }
 
+.highlight{
+    position:relative;
+    background-color:yellow;
+    color:black;
+    line-height: 1;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: 1em 1em 0em 0em;
+    float: right;
+    z-index:1;
+    box-shadow: 3px 3px 5px black;
+    animation: fadeIn 2s ease 0s 1 normal;
+}
 
 /* popuo用のツールチップ */ 
 /* ツールチップ部分を隠す */
-div.mdg .box span, .label span{
+div.mdpe .box span, div.mdpe .label span{
     display: none;
+}
+
+div.mdpe .box:hover, div.mdpe .label:hover{
+    user-select: text;
+    cursor: auto;
+    z-index:20;
 }
  
 /* マウスオーバー時にツールチップを表示 */
-div.mdg .box:hover span, .label:hover span{
+div.mdpe .box:hover span, div.mdpe .label:hover span{
+    user-select: text;
     display: block;                  /* ボックス要素にする */
     position: absolute;            /* relativeからの絶対位置 */
     top:auto;
@@ -360,9 +457,8 @@ div.mdg .box:hover span, .label:hover span{
     padding-right: 1rem;
     border: 1px solid #0D47A1;
     border-radius:3px;
-    z-index:10;
+    z-index: 20;
 }
-
 
 #view { 
 	height:100% ; 
@@ -404,6 +500,3 @@ input[type=range] {
 	width:300px ; 
 	background-color:#ccc; 
 } 
-div.mdiv { 
-	margin:5px ;
-}

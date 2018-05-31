@@ -1,7 +1,7 @@
 $(function(){
     // 必要なjsとcssのインポート
-    importScript('MediaWiki:Mdg.js');
-    importStylesheet('MediaWiki:Mdg.css');
+    importScript('MediaWiki:PathwayEditor.js');
+    importStylesheet('MediaWiki:PathwayEditor.css');
     
     // wikiの<div id="mainTxt">に必要なhtmlを挿入
     var str = (function() {/*
@@ -14,7 +14,7 @@ $(function(){
     <div id=vbase>  
     <div id=rollbase> 
     <div style=\"overflow:scroll;\"> 
-    <div id=base class=mdg><svg id=mdg_svg></svg></div>  
+    <div id=base class=mdpe><svg id=mdpe_svg></svg></div>  
     </div> 
     </div> 
     </div> 
@@ -22,7 +22,7 @@ $(function(){
     */}).toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1].replace(/\n|\r/g, "");
     $('#mainTxt').html(str);
 	
-    // main handler, importとの時間差？のせいなのか、setTimeoutしないとmdg_drawがないと判断される
+    // main handler, importとの時間差？のせいなのか、setTimeoutしないとmdpe_drawがないと判断される
     setTimeout($.proxy(function() {		
         $('#base').css('width',"2900px").css('height',"2000px") ;
         
@@ -39,7 +39,7 @@ $(function(){
         });
         
         // 初期化
-        var b = new mdg_draw($('#base')) ;
+        var b = new mdpe_draw($('#base')) ;
         var data = b.parse($('#source').html());
         b.setobj(data,true) ;
         

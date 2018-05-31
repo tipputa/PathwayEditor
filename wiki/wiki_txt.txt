@@ -1,36 +1,42 @@
 <div id="source" style="display:none">
 <nowiki>
-[c1] (image100 TC) <1,20.5>
+[title] <0.5,0.5>
+#Glycerolipid Metabolome
+Example metabolic pathway map
+References:
+?[link] (http://www.genome.jp/kegg-bin/show_pathway?map=map00561&show_description=show "KEGG GLYCEROLIPID METABOLISM")
+---
+?[link] (http://www.genome.jp/kegg-bin/show_pathway?map00564 "KEGG: GLYCEROPHOSPHOLIPID METABOLISM")
+
+//
+// compound information 
+//
+// Glycerol
+[c1] <1.5,27>
 Glycerol
 <pop>
-//![image](img/c1.png "glycerol")
 ?[link](http://www.genome.jp/dbget-bin/www_bget?C00116 "KEGG")
 </pop>
 =[g1]d(S l_w3)=>[c2]
 <=[g2]u=[c2]
 
 // G3P
-[c2] <13,20>
+[c2] <13.5,27>
  G3P
 <pop>
-//![image] (img/c2.png "__sn__-glycerol 3-phosphate")
 ?[link] (http://www.genome.jp/dbget-bin/www_bget?C00681 "KEGG")
 </pop>
 =[g3](l_w3)=>[c3]
 
 
 //Acetyl-G3P
-[c3] <23,20>
+[c3] <23.5,27>
 Acyl-G3P
-<pop>
-//![image] (img/c3.png "1-Acyl-__sn__-glycerol 3-phosphate")
-</pop>
 =[g4](l_w3)=>[c4]
 
 
 // Ptd-acid
-[c4] (image200) <36.5,23.8>
-//![image](img/c4.png)
+[c4]<35.5,26>
 ?[link to LB list](http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPA "Phosphatidic acid")
 <font size="1em"> link to LBGPA list in LIpidBank Wiki</font>
 <pop>
@@ -41,17 +47,15 @@ u=[g5](S l_w3)=>d[c6]
 
 
 // diacyl-glycerol
-[c5] (image200) <36.5,37>
-aa
-//![image] (img/c5.png "1,2-diacyl-__sn__-glycerol")
+[c5]  <36.5,37>
 d=[g14](S l_w3)=>u[c10]
 
 //CDP-diacetylglycerol
-[c6] (image200) <36.5,13>
-//<img width="200px" src=img/c6.png></img>
+[c6] <36.5,13.5>
+<img width="200px" src=img/c6.png></img>
 CDP-diacetylglycerol
 <pop>
-//![img](img/c6_2.GIF) 
+![img](img/c6_2.GIF) 
 ?[l] (http://www.genome.jp/dbget-bin/www_bget?C00269 "KEGG")
 </pop>
 =[g6](l_w3)=>[c7]
@@ -59,8 +63,7 @@ CDP-diacetylglycerol
 l=[g11](S l_w2)=>r[c12]
 
 //PI
-[c7] (image200) <57.5,3.5>
-//![image] (img/c7.png)
+[c7] <57.5,3.5>
 ?[lipidBank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPI "Phosphatidyl-inositol")
 <font size="1em"> link to LBGPI list in LIpidBank Wiki</font>
 <pop>
@@ -69,15 +72,13 @@ l=[g11](S l_w2)=>r[c12]
 
 
 //PS
-[c8] (image) <57.5,18.5>
-//![image] (img/c8.png)
+[c8]  <57.5,18.5>
 ?[lipidBank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPS "Phosphatidyl-serine")
 <font size="1em"> link to LBGPS list in LIpidBank Wiki</font>
 
 
 // PE
-[c9] (image) <58,36.5>
-//![image] (img/c9.png)
+[c9] <58,36.5>
 ?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPE "Phosphatidyl-ethanolamine")
 <font size="1em"> link to LBGPE list in LIpidBank Wiki</font>
 l<=[g9](l_w3)=r[c5]
@@ -85,19 +86,17 @@ u=[g10](S l_w3)=>d[c8]
 d=(l_w3)=>r[c10]
 
 // PC
-[c10] (image) <33,54.5>
-//![image] (img/c10.png)
+[c10]  <33,54.5>
 ?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPC "Phosphatidyl-choline")
 <font size="1em"> link to LBGPC list in LIpidBank Wiki</font>
 
 
 //PG
-[c11] (image200) <2,11>
-//![image] (img/c11.png)
+[c11] <1.5,12.5>
 ?[lipidbank] (http://jcbl.jp/wiki/Volatile:ListMol?my_1=LBGPG "Phosphatidyl-glycerol")
 <font size="1em"> link to LBGPG list in LIpidBank Wiki</font>
 
-[c12] <21.5,15>
+[c12] <21.5,14>
 Ptd-G-phosphate
 <pop>
 Phosphatidylglycerophosphate
@@ -226,14 +225,13 @@ Catalyzes the three sequential steps of the methylation pathway of phosphatidylc
 ?[kegg] (http://www.genome.jp/dbget-bin/www_bget?hsa:10400 "KEGG")
 </pop>
 
-
 // additional
 // Acyl-CoA
-[acylcoa1] (small8) <17,17>
+[acylcoa1] (small8) <15.5,24.5>
 Acyl-CoA
 d==>[c3]
 
-[acylcoa2] (small8) <28,24.5>
+[acylcoa2] (small8) <27.5,23.5>
 Acyl-CoA
 d==>[c4]
 
@@ -241,8 +239,7 @@ d==>[c4]
 CDP-choline
 l=[g13]=>r[c10]
 
-[memo1] (trans) <43.5,46>
-catalyzes the three sequential steps
+
 </nowiki>
 </div>
 <div id="mainTxt" style="height:400px;"> </div>

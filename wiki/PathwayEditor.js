@@ -1,10 +1,11 @@
-var mdg_draw = function(_base) {
+var mdpe_draw = function(_base) {
     // 初期化
     this.base = $(_base) ;
     this.svg = $("svg",base) ;
     this.bpos = {} ; // boxのinfo保存用
     this.em = parseInt($('html').css('font-size')) ; // 基準とするフォントサイズ
     this.genebase = []; // gene infoの保存用
+    this.dragDrop = {};
     var lp,le ; // boxの初期位置情報。随時更新される。
 
     // dataをセット (this.create, this.setgene) -> redraw
@@ -72,10 +73,21 @@ var mdg_draw = function(_base) {
         }
         // <table> or <div>を作成。ここでは位置情報のセットはredrawで行う
         var e = $(type).addClass("box").attr('id',box.id).attr('title',box.id).
-            attr('draggable',d).attr('align',"center").html(inner) ;
+            attr('draggable',d).html(inner) ;
         if(box.cls) { // class情報の追加
             if(typeof box.cls == "string") box.cls = [box.cls] ;
             for(var i in box.cls) e.addClass(box.cls[i]) ;
+        }
+        if(box.size){
+            e.css("width", box.size.w+"px").css("height", box.size.h+"px");
+        }
+        if(box.css){
+            var css = box.css.split(";");
+            for(var i in css){
+                if(css[i] != ""){
+                var css2 = css[i].split(":");
+                if(css2.length>1) e.css(css2[0].trim(), css2[1].trim());
+            }}
         }
         
         this.base.append(e) ;
@@ -114,7 +126,7 @@ var mdg_draw = function(_base) {
 
                     // geneが複数回使われるかもしれないため、idにcount情報追加。
                     var newid = id + "_" + gene.count;
-                    g = $("<div>").addClass("label").attr("id", newid).html(gene.inner).css('left', mp.x+"px").css('top',mp.y+"px");
+                    g = $("<div>").addClass("label").attr("title",id).attr("id", newid).html(gene.inner).css('left', mp.x+"px").css('top',mp.y+"px");
                     this.base.append(g);
                     gene.count = gene.count + 1;
                     
@@ -222,31 +234,46 @@ function setConnectPos(o,f) {
     var sy = parseInt(o.css('top')) ;
     var w = parseInt(o.css('width')) ;
     var h = parseInt(o.css('height')) ;
+    var tagName = o.prop("tagName");	
     var px,py,vx,vy ;
     var t = $('tr',o) ;
     var d = $('th,td',o) ;
-    if(t.length>0 && f.match(/(l|r)([0-9]+)/)) {
-        vy = 0 ;
-        if(RegExp.$1=="l") {
-            px = sx ;
-            vx = -1 ;
-        } else if(RegExp.$1=="r") {
-            px = sx+w ;
-            vx = 1 ;
+    if(tagName == "TABLE"){
+        if(t.length>0 && f.match(/(l|r)([0-9]+)/)) {
+            vy = 0 ;
+            if(RegExp.$1=="l") {
+                px = sx ;
+                vx = -1 ;
+            } else if(RegExp.$1=="r") {
+                px = sx+w ;
+                vx = 1 ;
+            }
+            var tn = RegExp.$2-1 ;
+            py = sy + t[tn].offsetTop+t[tn].offsetHeight/2 ;
+        } else if(d.length>0 && f.match(/(u|d)([0-9]+)/)) {
+            vx = 0 ;
+            if(RegExp.$1=="u") {
+                py = sy ;
+                vy = -1 ;
+            } else if(RegExp.$1=="d") {
+                py = sy+h ;
+                vy = 1 ;
+            }
+            var tn = (RegExp.$2!=undefined)?RegExp.$2-1:0 ;
+            px = sx + d[tn].offsetLeft+d[tn].offsetWidth/2 ;
+        } else {
+            switch(f.substr(0,1)) {
+                case 'u':
+                    px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
+                case 'd':
+                    px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
+                case 'l':
+                    px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
+                case 'r':
+                    px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
+                default:
+            }
         }
-        var tn = RegExp.$2-1 ;
-        py = sy + t[tn].offsetTop+t[tn].offsetHeight/2 ;
-    } else if(d.length>0 && f.match(/(u|d)([0-9]+)/)) {
-        vx = 0 ;
-        if(RegExp.$1=="u") {
-            py = sy ;
-            vy = -1 ;
-        } else if(RegExp.$1=="d") {
-            py = sy+h ;
-            vy = 1 ;
-        }
-        var tn = (RegExp.$2!=undefined)?RegExp.$2-1:0 ;
-        px = sx + d[tn].offsetLeft+d[tn].offsetWidth/2 ;
     } else {
         switch(f.substr(0,1)) {
             case 'u':
@@ -268,13 +295,73 @@ function setConnectPos(o,f) {
     
     // handlerで使用。boxのdrag&drop時に値を返す。
     this.setpos = function(id,x,y) {
-        this.bpos[id] = {x:parseFloat(x),y:parseFloat(y)} ;
+        var px = parseFloat(x)>0?parseFloat(x):1;
+        var py = parseFloat(y)>0?parseFloat(y):1;        
+        this.bpos[id] = {x:px,y:py} ;
     }
+    
+    this.changeAllPos = function(opt){
+        var addX, addY, size = 2;
+        switch (opt){
+            case "L": addX = -size; addY = 0; break;
+            case "R": addX = size; addY = 0; break;
+            case "D": addX = 0; addY = size; break;
+            case "U": addX = 0; addY = -size; break;
+        }
+        for(var id in this.bpos) {　// boxの位置情報を更新
+            var px = parseFloat(this.bpos[id].x) + addX;
+            var py = parseFloat(this.bpos[id].y) + addY;
+            if(px>=0 && py >= 0)this.bpos[id] = {x:px, y:py};
+        }
+    }
+    
+    this.select = function(rect){
+        this.deact()
+        var l = parseFloat(rect.css("left"))/this.em;
+        var t = parseFloat(rect.css("top"))/this.em;
+        var w = parseFloat(rect.css("width"))/this.em;
+        var h = parseFloat(rect.css("height"))/this.em;
+        for(var id in this.bpos){
+            if(this.bpos[id].x > l && this.bpos[id].x < l+w && this.bpos[id].y > t && this.bpos[id].y < t+h){
+                $('#'+id).addClass("active");
+            }
+        }
+    }
+    
+    this.deact = function(){
+        for(var id in this.bpos){
+            if($('#'+id).hasClass("active")){
+                $('#'+id).removeClass("active");
+            }
+        }
+    }
+    
+    this.drop = function(mag){
+        var ox = (this.dragDrop.pX - this.dragDrop.preX)/mag ;
+        var oy = (this.dragDrop.pY - this.dragDrop.preY)/mag ;
+        for(var id in this.bpos){
+            if($('#'+id).hasClass("active")){
+                var ex = parseInt($('#'+id).css("left")) ;
+                var ey = parseInt($('#'+id).css("top")) ;                
+                var px = Math.floor(((ex+ox)/this.em+0.25)*2)/2 ;
+                var py = Math.floor(((ey+oy)/this.em+0.25)*2)/2 ;
+                this.setpos(id,px,py) ;
+            }
+        }
+    }
+    function strHeight(str, width) {
+      var e = $("#ruler").css("width", width);
+      var height = e.text(str).get(0).offsetHeight;
+      e.empty();
+        console.info(height);
+      return height;
+    }
+
     
 
     // text 関連
     // md parser
-    this.m_h = /^\[([A-z0-9-_]*)\]\s*(?:\((.*)\))?\s*(?:<\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*>)?$/ ;
+    this.m_h = /^\[([A-z0-9-_]*)\]\s*(?:\(([^)]*)\))?\s*(?:<\s*([0-9\.]+)\s*,\s*([0-9\.]+)\s*,*\s*([0-9\.]+)?\s*,*\s*([0-9\.]+)?\s*>)?\s*(?:css\(([^)]*)\))?\s*$/ ;
     this.parse = function(text) {
         // return するbox, conn, genesの初期化
         var box = [] ;
@@ -286,15 +373,18 @@ function setConnectPos(o,f) {
         var m_comm = /^\/\// ;
         var m_wiki = /^<?nowiki>/;
         var m_sep = /^---*$/ ;
-        var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[(.*)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\((.*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([a-z0-9-_]+)\]\s*$/i ;
+        var m_conn = /^([u|d|l|r][0-9]*)?(<)?==?(?:\[([A-z0-9-_]+)\])?\s*([u|d|l|r][0-9]*)?\s*(?:\(([^"=>]*)\))?==?(>)?([u|d|l|r][0-9]*)?\[([A-z0-9-_]+)\]\s*$/i ;
         var m_ulink= /\?\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
-        var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"(.+)")?\))?/i;
+        var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"([^")]*)")?\))?\s*(?:css\(([^)]*)\))?/i;
         var m_popStart = /^<pop>$/;
         var m_popEnd = /^<\/pop>$/;
         var m_title = /^#(.*)/ ;
+        var m_GL = /^!GL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
+        var m_PG = /^!PG\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for Phosphatidylglycerol
+        var m_CL = /^!CL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?}$/; // for Cardiolipin
 
         var l = text.split("\n") ;
-        var b = {id:"",bl:[]} ;
+        var b = {id:"",bl:[], check:false} ;
         var gene = {id:"", gl:[]};
         var boxcheck = true;
         // read start
@@ -308,8 +398,9 @@ function setConnectPos(o,f) {
             // wikiTag or blank
             if(cl =="" || m_comm.exec(cl) || cl.match(m_wiki)){continue;}
             else if(a = this.m_h.exec(cl)) { // set box info
-                if(b.bl.length>0) {
+                if(b.bl.length>0 || b.check) {
                     pbox(b) ;
+                    b.check = false;
                 } else if(gene.gl.length>0){
                     pgene(gene);
                     gene.id = "";
@@ -319,12 +410,16 @@ function setConnectPos(o,f) {
                 b.id = a[1] ;
                 b.bl = [] ;
                 b.cls = a[2] ;
-                b.pos = (a[3]!=undefined && a[4]!=undefined)?{x:a[3],y:a[4]}:undefined ;
+                b.pos = (a[3] && a[4])?{x:a[3],y:a[4]}:undefined ;
+                b.size = (a[5] && a[6]) ?{w:a[5], h:a[6]}:undefined;
+                b.css = (a[7])?a[7]:undefined;
+                if(b.size){b.check = true;}
             } else if(g = m_g.exec(cl)) { // set gene info
-                if(b.bl.length>0) {
+                if(b.bl.length>0 || b.check) {
                     pbox(b);
                     b.id = "";
                     b.bl = [];
+                    b.check = false;
                 } else if(gene.gl.length>0){
                     pgene(gene);
                 }
@@ -356,7 +451,22 @@ function setConnectPos(o,f) {
                 ll.length=0;
                 Array.prototype.push.apply(ll, llp);
             } else if(a = m_image.exec(cl)) { // imgの読み込み
-                var im = ( '<img src="'+a[2]+'" title='+a[1]+' />') ;
+                var im;
+                if(a[4]!=undefined){
+                    var style = [];
+                    var css = a[4].split(";");
+                    for(var i in css){
+                        if(css[i] != ""){
+                            var css2 = css[i].split(":");
+                            if(css2.length>1){
+                                style.push(css2[0].trim()+":"+css2[1].trim()+";");
+                            }
+                        }
+                    }
+                    im = ( '<img src="'+a[2]+'" title='+a[1]+' style="' + style.join(" ") + '"/>');
+                }
+                else {im = ( '<img src="'+a[2]+'" title='+a[1]+' />') ;
+                }
                 if(a[3]!=undefined) {
                     im = "<figure>"+im+"<figcaption>"+fontChange(a[3])+"</figcaption></figure>" ;
                 }
@@ -364,6 +474,57 @@ function setConnectPos(o,f) {
             } else if(a = m_ulink.exec(cl)) { // urlの読み込み
                 var url = "<a href="+a[2]+" target=\"_blank\">" + fontChange(a[3]) + "</a>";
                 ll.push(url);
+            } else if (a = m_GL.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                var txt = '\
+                <table align=center style="transform:translate(-6px, 10px)"> \
+                <tr><td rowspan=3><img src=img/GL2.png style=" height:40px;transform:translateX(16px);"/ ></td> \
+                <td nowrap align=left style="line-height:0%;">'+fontChange(R1)+'</td></tr> \
+                <tr><td nowrap align=left style="line-height:0%;">'+fontChange(R2)+'</td></tr> \
+                <tr><td nowrap align=left  style="line-height:0%;">' + fontChange(R3)+ '</td></tr></table>';
+                ll.push(txt);
+                
+            }else if (a = m_PG.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                var txt = '\
+                <table align=center style="transform:translateY(10px)">\
+                <tr><td rowspan=3><img src=img/GL2.png style="height:50px;transform:translateX(18px);"/></td> \
+                <td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=center  style="line-height:50%;">'+fontChange(R3)+'</td>\
+                <td rowspan=3><img src=img/GLRev.png style=" height:50px;transform:translateX(-18px) rotate(180deg);"/ ></td></tr>\
+                <tr><td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R4)+'</td></tr> \
+                <td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R5)+'</td></tr></table>'
+                ll.push(txt);
+
+            } else if(a = m_CL.exec(cl)){
+                R1 = a[1]?a[1]:"";
+                R2 = a[2]?a[2]:"";
+                R3 = a[3]?a[3]:"";
+                R4 = a[4]?a[4]:"";
+                R5 = a[5]?a[5]:"";
+                R6 = a[6]?a[6]:"";
+                R7 = a[7]?a[7]:"";
+
+                var txt = '\
+                <table align=center style="transform:translateY(10px)"> \
+                <tr><td rowspan=3><img src=img/GL2.png style=" height:50px;transform:translateX(18px);"/ ></td>\
+                <td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R1)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R2)+'</td></tr>\
+                <tr><td nowrap align=center  style="line-height:50%;">'+fontChange(R3)+'</td>\
+                <td rowspan=3><img src=img/GLRev.png style="height:50px;transform:translateX(-18px) rotate(180deg);"/ ></td></tr>\
+                <tr><td colspan=2 nowrap align=right style="line-height:50%;">'+fontChange(R4)+'</td></tr>\
+                <td rowspan=3><img src=img/GL2.png style=" height:50px;transform:translateX(18px);"/ ></td> \
+                <td nowrap align=right style="line-height:50%;">'+fontChange(R5)+'</td>\
+                </tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R6)+'</td></tr>\
+                <tr><td colspan=2 nowrap align=left style="line-height:50%;">'+fontChange(R7)+'</td></tr> </table>'    
+                ll.push(txt);
             } else { // その他のテキスト
                 cl = fontChange(cl);
                 ll.push(cl) ;
@@ -402,7 +563,7 @@ function setConnectPos(o,f) {
                     ll = [] ;
                     var fp = "r" ;
                     var tp = "l1" ;
-                    var ar = (a[2]!=undefined)?((a[5]!=undefined)?"b":"f"):((a[5]!=undefined)?"t":"") ; // 向き
+                    var ar = (a[2]!=undefined)?((a[6]!=undefined)?"b":"f"):((a[6]!=undefined)?"t":"") ; // 向き
                     if(a[1]!=undefined) fp = a[1] ;
                     if(a[7]!=undefined) tp = a[7] ;
                     // connectionの設定, geneでgeneid, gposで[u|d|l|r]
@@ -413,21 +574,42 @@ function setConnectPos(o,f) {
                 }
             }
             if(ll.length>0) l.push( ll.join("<br/>")) ;
+            else if(b.check) l.push(" ");
             if(l.length==1) l = l[0] ;
-            box.push( {id:b.id,inner:l,pos:b.pos,cls:b.cls,title:b.title} ) ;
+            box.push( {id:b.id,inner:l,pos:b.pos,cls:b.cls,title:b.title, size:b.size, css:b.css} ) ;
         }
         return {box:box, conn:conn, gene:genes} ;
     }
+    
+    this.searchPosition = function(text,w,tag){
+        var l = text.split("\n") ;
+        var height = 0;
+        var heightTmp;
+        for(var i in l) {
+            var cl = l[i];
+            if(cl.match(tag)){break;}
+            if(cl == "") height = height + 16*1.2;
+            else {heightTmp = strHeight(cl, parseFloat(w));height = height + heightTmp;}
+        }
+        console.info(height);
+        return height;
+    }
+
     // boxを移動させた時にtextの座標も変更
     this.upd_text = function(text) {
         var l = text.split("\n") ;
         for(var i in l) {
             var cl = l[i] ;
-            var a ;
+            var a 
             if(cl=="") continue ;
             if(a = this.m_h.exec(cl)) {
                 var pos = (this.bpos[a[1]]!=undefined)?this.bpos[a[1]]:{x:a[3],y:a[4]} ;
-                l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+">" ;
+                var css = a[7] ? "css("+a[7]+")" : "";
+                if(a[5] && a[6]){
+                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+","+a[5]+","+a[6]+">"+css;
+                }else{
+                    l[i] = "["+a[1]+"]"+((a[2]!=undefined)?" ("+a[2]+")":"")+" <"+pos.x+","+pos.y+">"+css ;
+                }
             }
         }
         return l.join("\n") ;
@@ -449,3 +631,4 @@ function setConnectPos(o,f) {
         return cl
     }
 }
+
