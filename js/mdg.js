@@ -202,7 +202,10 @@ var mdg_draw = function(_base) {
                     }
                 }
             }
-            if(cc.length>0) cls = 'class="'+cc.join(" ")+'"' ;
+            if(cc.length>0){ cls = 'class="'+cc.join(" ")+'"' ;
+                           }
+        }else{
+            cls = 'class="l_w3"'
         }
 
         // startとendが10px以下のずれの場合、矢印のend pointをstartと合わせる（直線にする）
@@ -213,6 +216,9 @@ var mdg_draw = function(_base) {
         // 矢印ライン部分の追加
         // 直線の場合
         if(param.type=="S") {
+            if(param.arrow=="b"||param.arrow=="t"){
+                ep.x = ep.x - 2;
+            }
             ret.push('<path d="M ' + sp.x + ' ' + sp.y + ' L ' + ep.x + ' ' + ep.y + ' ' + '" ' + cls + ' fill="None" />') ;
         } else { // それ以外のカーブの場合
             var pm = 50 ;
@@ -234,7 +240,7 @@ var mdg_draw = function(_base) {
                 v = (param.type=="S")?{x:sp.x-ep.x ,y:sp.y-ep.y}:{x:ep.vx,y:ep.vy} ;
                 p1 = rot(v,th) ;
                 p2 = rot(v,-th) ;
-                ret.push('<path d="M ' + ' ' + round(ep.x+p1.x*an) + ' ' + round(ep.y+p1.y*an)  + ' L ' + ep.x + ' ' + ep.y + ' L ' + round(ep.x+p2.x*an)  + ' ' + round(ep.y+p2.y*an)  + ' Z" fill=' + fillcol + ' ' + cls  + '/>')
+                ret.push('<path d="M ' + ' ' + round(ep.x+p1.x*an) + ' ' + round(ep.y+p1.y*an)  + ' L ' + ep.x + ' ' + ep.y + ' L ' + round(ep.x+p2.x*an)  + ' ' + round(ep.y+p2.y*an)  + ' Z" fill=' + fillcol   + '/>')
             }
             if(param.arrow=="b"||param.arrow=="t") av(sp,ep) ;
             if(param.arrow=="b"||param.arrow=="f") av(ep,sp) ;
@@ -296,15 +302,15 @@ var mdg_draw = function(_base) {
             case 'l':
                 px = sx ;py = sy + h/2 ; vx=-1;vy=0; break ;
             case 'r':
-                px = sx+w+5 ;py = sy + h/2 ; vx=1;vy=0; break ;
+                px = sx+w ;py = sy + h/2 ; vx=1;vy=0; break ;
             case 'U':
                 px = sx+w/2 ;py = sy ; vx=0 ;vy=-1; break ;
             case 'D':
                 px = sx+w/2 ;py = sy+h ; vx=0;vy=1; break ;
             case 'L':
-                px = sx ;py = sy + h/1.5 ; vx=-1;vy=0; break ;
+                px = sx; py = sy + h/1.5 ; vx=-1;vy=0; break ;
             case 'R':
-                px = sx+w+5 ;py = sy + h/1.5 ; vx=1;vy=0; break ;
+                px = sx+w; py = sy + h/1.5 ; vx=1;vy=0; break ;
             default:
         }
         //alert(f);
@@ -484,8 +490,8 @@ var mdg_draw = function(_base) {
         var m_sep = /^---*$/ ;
         var m_ulink= /\?\[(.+)\]\s*(?:\(([^ "]+)\s*(?:"(.+)")?\))?/i;
         var m_image = /\!\[(.+)\]\s*(?:\(([^ ")]+)\s*(?:"([^")]*)")?\))?\s*(?:css\(([^)]*)\))?/i;
-        var m_popStart = /^<pop>$/;
-        var m_popEnd = /^<\/pop>$/;
+        var m_popCheck = /^\*\*\*$/;
+        var popCheck = false;
         var m_title = /^#(.*)/ ;
         var m_GL = /^!GL\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for glycerolipids
         var m_PG = /^!PG\{([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\|?([^|]*)?\}$/; // for Phosphatidylglycerol
@@ -549,15 +555,17 @@ var mdg_draw = function(_base) {
          // share parser
         function sparser(cl, ll, llp){
             var a;
-            if(cl.match(m_popStart)){
+            if(cl.match(m_popCheck) && !popCheck){
                 // llの一時初期化。popEndで全てまとめてllにset
                 if(ll.length>0) llp.push(ll.join("<br/>"));
                 ll.length=0;
+                popCheck = true;
             }
-            else if(cl.match(m_popEnd)){
+            else if(cl.match(m_popCheck) && popCheck){
                 // <pop></pop>の間を<span>タグで囲む。cssで<span>タグはpopupになるように設定
                 if(ll.length>0) llp.push( "<span>" + ll.join("<br/>") + "</span>") ;
                 ll.length=0;
+                popCheck = false;
                 Array.prototype.push.apply(ll, llp);
             } else if(a = m_image.exec(cl)) { // imgの読み込み
                 var im;
@@ -762,6 +770,8 @@ var mdg_draw = function(_base) {
 }
 
 
+
+
 var strUndo = [];
 var strRedo = [];
 var firstUndo = true;
@@ -780,6 +790,7 @@ $(function() {
 	$('#zoom').on("input change",function() {
 		mag = $(this).val()/100 ;
 		$('#szoom').html("#base {transform: scale("+mag+")}");
+        $('#spanzoom').html("div.mdg .box span, div.mdg .label span{transform: scale("+ (1 / mag) +");}")
 	})
 
     // サイズ設定

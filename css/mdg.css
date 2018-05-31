@@ -33,7 +33,7 @@ div.mdg .box {
 }
 div.mdg .label {
     position:absolute;
-    font-size:0.8em;
+    font-size:1em;
     z-index:5;
     box-sizing: border-box;
     border-radius:0.5em;
@@ -43,13 +43,13 @@ div.mdg .label {
     padding-right:0.5em;
     background-color: #FFE0B2;
     font-family: 'Helvetica';
-    border:1px solid #E65100;
+    border:2px solid #E65100;
     color:#1A237E;
     box-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
 }
 
 div.mdg .gene {
-    font-size:0.8em;
+    font-size:1em;
     z-index:5;
     text-align:left;
     line-height:normal;
@@ -59,7 +59,7 @@ div.mdg .gene {
     padding-left:0.5em;
     padding-right:0.5em;
     background-color: #FFE0B2;
-    border:1px solid #E65100;
+    border:2px solid #E65100;
     color:#1A237E;
     box-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
 }
