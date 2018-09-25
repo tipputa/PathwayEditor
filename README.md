@@ -2,7 +2,7 @@
 
 Pathway Mapをテキストから描けるWebツールです。
 
-index.htmlをブラウザで開いてください。
+https://tipputa.github.io/PathwayEditor/
 
 ## Example
 ```
